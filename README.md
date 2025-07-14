@@ -1,5 +1,3 @@
-# blog
-=======
 # Ezpz 
 1. Ae vào data/members.toml để chỉnh thông tin cá nhân , avatar thì lưu ở static/icons/???.png
 2. Viết wu thì tui có làm file gen.py ở content/writeups
@@ -19,5 +17,3 @@ Build dưới local :
 ```
 **Khi lên server thì chỉ hiện thị tên giải ở phần WriteUps thui. Flag -D để tên challenge cũng hiện ở WriteUps Local cho dễ debug thui.**
 - Ví dụ ae muốn viết 1 technique j đó thui chứ không trong giải ctf nào thì tạo file ở /writeups  với **type = 'list'** tương tự với **CTF_NAME.md** là được 
-
-# blog
