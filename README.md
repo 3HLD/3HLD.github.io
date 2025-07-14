@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # blog
 =======
 # Ezpz 
@@ -22,4 +21,3 @@ Build dưới local :
 - Ví dụ ae muốn viết 1 technique j đó thui chứ không trong giải ctf nào thì tạo file ở /writeups  với **type = 'list'** tương tự với **CTF_NAME.md** là được 
 
 # blog
->>>>>>> 2ee6fd6 (first commit)
