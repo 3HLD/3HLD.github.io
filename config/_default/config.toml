@@ -1,0 +1,42 @@
+baseURL = "https://3HLD.github.io/"
+languageCode = "en"
+title = "3HLD"
+description = "3HLD"
+theme = "bytethecookies-theme"
+defaultContentLanguage = "en"
+enableEmoji = false 
+paginate = 5
+enableGitInfo = true
+
+
+[taxonomies]
+category = "categories"
+tag = "tags"
+series = "series"
+
+[outputs]
+home = ["HTML", "RSS", "JSON"]
+
+
+[params.categoryEmojis]
+Web = "🌐"
+Netw = "📡"
+Pwn = "💻"
+Crypto = "🔐"
+Forensic = "🕵️"
+Osint = "🔍"
+Misc = "🔧"
+Rev = "🔨"
+Block = "🔗"
+
+
+[markup]
+[markup.goldmark]
+[markup.goldmark.extensions]
+[markup.goldmark.extensions.passthrough]
+enable = true
+[markup.goldmark.extensions.passthrough.delimiters]
+block = [['\[', '\]'], ['$$', '$$']]
+inline = [['\(', '\)'], ['$', '$']]
+[params]
+math = true

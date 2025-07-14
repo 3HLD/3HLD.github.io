@@ -1,0 +1,10 @@
+{
+ "compilerOptions": {
+  "baseUrl": ".",
+  "paths": {
+   "*": [
+    "../themes/bytethecookies-theme/assets/*"
+   ]
+  }
+ }
+}

@@ -1,0 +1,39 @@
+[[members]]
+image = "icons/mahiru.png"
+name = "hibwyli"
+github = "https://hibwyli.github.io/"
+handle = "@hibwyli"
+role = "University of Information"
+categories = ["Web"]
+
+[[members]]
+image = "icons/download.jpg"
+name = "Tester"
+github = "https://github.com/hibwyli"
+handle = "@"
+role = "University of Information"
+categories = ["Pwn"]
+
+[[members]]
+image = "icons/download.jpg"
+name = "Tester"
+github = "https://github.com/hibwyli"
+handle = "@hibwyli"
+role = "University of Information"
+categories = ["Rev"]
+
+[[members]]
+image = "icons/download.jpg"
+name = "Tester"
+github = "https://github.com/hibwyli"
+handle = "@hibwyli"
+role = "University of Information"
+categories = ["Crypto"]
+
+[[members]]
+image = "icons/download.jpg"
+name = "Tester"
+github = "https://github.com/hibwyli"
+handle = "@hibwyli"
+role = "University of Information"
+categories = ["Osint","Forensic"]

