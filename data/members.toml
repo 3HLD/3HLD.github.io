@@ -31,9 +31,9 @@ role = "University of Information"
 categories = ["Crypto"]
 
 [[members]]
-image = "icons/download.jpg"
-name = "Tester"
-github = "https://github.com/hibwyli"
-handle = "@hibwyli"
+image = "icons/cry.jpg"
+name = "iamabighotdog"
+github = "https://github.com/iamabighotdog"
+handle = "@iamabighotdog"
 role = "University of Information"
-categories = ["Osint","Forensic"]
+categories = ["Osint","Forensic","Misc"]
