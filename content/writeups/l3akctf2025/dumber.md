@@ -5,7 +5,7 @@ tags = [
   "50 points",
   "147 solves",
 ]
-draft = true
+draft = false
 +++
 
 ## Dumber 
