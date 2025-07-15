@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>25 Solves on 3HLD</title>
-    <link>http://localhost:1313/tags/25-solves/</link>
+    <link>https://3HLD.github.io/tags/25-solves/</link>
     <description>Recent content in 25 Solves on 3HLD</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 23 Jun 2025 18:30:32 +0200</lastBuildDate><atom:link href="http://localhost:1313/tags/25-solves/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 23 Jun 2025 18:30:32 +0200</lastBuildDate><atom:link href="https://3HLD.github.io/tags/25-solves/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>FANCY TEXT</title>
-      <link>http://localhost:1313/writeups/maltactf2025/fancy/</link>
+      <link>https://3HLD.github.io/writeups/maltactf2025/fancy/</link>
       <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
       
-      <guid>http://localhost:1313/writeups/maltactf2025/fancy/</guid>
+      <guid>https://3HLD.github.io/writeups/maltactf2025/fancy/</guid>
       <description>Malta CTF Giải này mình chỉ làm được có một bài thui &amp;hellip;. bài đầu khá dễ nên mình sẽ viết về câu 2.
 Fancy text Bài này là một bài XSS nhưng sử dụng DOMPURIFY latest và CSP để chặn hầu hết mọi đường . Source code đơn giản như sau : index.html
 &amp;lt;head&amp;gt; &amp;lt;title&amp;gt;Fancy Text Generator!&amp;lt;/title&amp;gt; &amp;lt;link href=&amp;quot;https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace-theme-center-atom.min.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;&amp;gt; &amp;lt;link href=&amp;quot;/style.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;&amp;gt; &amp;lt;script integrity=&amp;quot;sha256-1ltlTOtatSNq5nY+DSYtbldahmQSfsXkeBYmBH5i9dQ=&amp;quot; src=&amp;quot;/loader.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;h1&amp;gt;Fancy text generator&amp;lt;/h1&amp;gt; &amp;lt;div id=&amp;quot;contentBox&amp;quot;&amp;gt;&amp;lt;%- text || &amp;quot;fancy text generator!</description>

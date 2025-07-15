@@ -13,7 +13,8 @@ Build dưới local :
 ```sh
     git submodule init
     git submodule update
-    hugo server -D
+    hugo --buildDrafts --buildFuture --cleanDestinationDir
+    hugo server
 ```
 **Khi lên server thì chỉ hiện thị tên giải ở phần WriteUps thui. Flag -D để tên challenge cũng hiện ở WriteUps Local cho dễ debug thui.**
 - Ví dụ ae muốn viết 1 technique j đó thui chứ không trong giải ctf nào thì tạo file ở /writeups  với **type = 'list'** tương tự với **CTF_NAME.md** là được 

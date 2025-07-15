@@ -7,23 +7,12 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>FANCY TEXT</title>
-      <link>http://localhost:1313/writeups/maltactf2025/fancy/</link>
-      <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
-      
-      <guid>http://localhost:1313/writeups/maltactf2025/fancy/</guid>
-      <description>Malta CTF Giải này mình chỉ làm được có một bài thui &amp;hellip;. bài đầu khá dễ nên mình sẽ viết về câu 2.
-Fancy text Bài này là một bài XSS nhưng sử dụng DOMPURIFY latest và CSP để chặn hầu hết mọi đường . Source code đơn giản như sau : index.html
-&amp;lt;head&amp;gt; &amp;lt;title&amp;gt;Fancy Text Generator!&amp;lt;/title&amp;gt; &amp;lt;link href=&amp;quot;https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace-theme-center-atom.min.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;&amp;gt; &amp;lt;link href=&amp;quot;/style.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;&amp;gt; &amp;lt;script integrity=&amp;quot;sha256-1ltlTOtatSNq5nY+DSYtbldahmQSfsXkeBYmBH5i9dQ=&amp;quot; src=&amp;quot;/loader.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;/head&amp;gt; &amp;lt;body&amp;gt; &amp;lt;h1&amp;gt;Fancy text generator&amp;lt;/h1&amp;gt; &amp;lt;div id=&amp;quot;contentBox&amp;quot;&amp;gt;&amp;lt;%- text || &amp;quot;fancy text generator!</description>
-    </item>
-    
-    <item>
       <title>l3akctf2025</title>
       <link>http://localhost:1313/writeups/l3akctf2025/</link>
       <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
       
       <guid>http://localhost:1313/writeups/l3akctf2025/</guid>
-      <description> l3akctf2025 Performance Summary CTFs: 8/22 Total points: 3863 Position: 40 Rating points: 7.132 Writeups Category flagguessr </description>
+      <description> l3akctf2025 Performance Summary CTFs: 8/22 Total points: 3863 Position: 40 Rating points: 7.132 Writeups Category flagguessr dumber </description>
     </item>
     
     <item>
@@ -42,19 +31,6 @@ Fancy text Bài này là một bài XSS nhưng sử dụng DOMPURIFY latest và 
       
       <guid>http://localhost:1313/news/cookiefarmv1.0.1/</guid>
       <description> Nothing &amp;hellip;. </description>
-    </item>
-    
-    <item>
-      <title>FLAG GUESSR</title>
-      <link>http://localhost:1313/writeups/l3akctf2025/flagguessr/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/writeups/l3akctf2025/flagguessr/</guid>
-      <description>L3AK CTF Write up cho bài mình không solve ra trong giải
-Knowledge : Dynamical link with LD_PRELOAD , Bypass Sessions , Md5 collision
-Bài này có 2 cách : Unintended và intended nhưng mình sẽ nói sơ qua về walkthrough trước nhé
-Walthrough : Mục tiêu của bài này là lấy được RCE thông qua một đống chain&amp;hellip;
-Trong giải thì bài này mình bị kẹt vì mắc một cái bẫy CSRF khá đần .</description>
     </item>
     
   </channel>
