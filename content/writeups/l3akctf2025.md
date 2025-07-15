@@ -28,3 +28,4 @@ type = 'list'
 #### Category
 
 - [flagguessr](/writeups/l3akctf2025/flagguessr/)
+- [dumber](/writeups/l3akctf2025/dumber/)
