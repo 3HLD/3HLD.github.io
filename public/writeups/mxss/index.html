@@ -1,0 +1,561 @@
+               
+
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href='https://3HLD.github.io/favicon.ico' type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+
+    <title>Some note on MXSS - 3HLD</title>
+
+    
+
+    
+
+    
+    <meta name="author" content="3HLD" />
+    
+
+    
+        <meta property="og:title" content="Some note on MXSS" />
+<meta property="og:description" content="DEEP DOWN TO DOMPURIFY Some note when learning mxss. Source : https://mizu.re/post/exploring-the-dompurify-library-bypasses-and-fixes
+DOWPURFIY WORKFLOWS : initDocument : Dùng API DOMParser để parse dữ liệu đúng như Browser parse createNodeIterator : Dùng API NodeIterator để iterate qua tất cả các node sanitizeElement : Kiểm tra tag allowed or not _sanitizeShadowDOM : The NodeIterator API doesn&rsquo;t iterate over the template tag by default. Recursively sanitizes when it reaches a DocumentFragment. _sanitizeAttributes : dùng dom apis để sanitize HTML attributes ." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://3HLD.github.io/writeups/mxss/" /><meta property="article:section" content="writeups" />
+<meta property="article:published_time" content="2025-06-23T18:30:32+02:00" />
+<meta property="article:modified_time" content="2025-06-23T18:30:32+02:00" />
+
+
+    
+
+    
+        <meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Some note on MXSS"/>
+<meta name="twitter:description" content="DEEP DOWN TO DOMPURIFY Some note when learning mxss. Source : https://mizu.re/post/exploring-the-dompurify-library-bypasses-and-fixes
+DOWPURFIY WORKFLOWS : initDocument : Dùng API DOMParser để parse dữ liệu đúng như Browser parse createNodeIterator : Dùng API NodeIterator để iterate qua tất cả các node sanitizeElement : Kiểm tra tag allowed or not _sanitizeShadowDOM : The NodeIterator API doesn&rsquo;t iterate over the template tag by default. Recursively sanitizes when it reaches a DocumentFragment. _sanitizeAttributes : dùng dom apis để sanitize HTML attributes ."/>
+
+    <link rel="stylesheet" href="/style.min.8053497bc6198f3358c801e5f03064d80ce7571fb629f13b737c35a0c04824e23c691661d258553b83fb8b0d4ddc67f6f03ef7690f069b4d52e1d2a6c273c789.css" integrity="sha512-gFNJe8YZjzNYyAHl8DBk2AznVx&#43;2KfE7c3w1oMBIJOI8aRZh0lhVO4P7iw1N3Gf28D73aQ8Gm01S4dKmwnPHiQ==">
+
+
+
+    <link rel="stylesheet" href="/lib/css/prism.min.6226f06f992e0d6166b0e26724efd050dcc381202a752892ba523b1b865de2ea5e427f8f7d10de682fc35d6e7444018247d1f25db5e1e3bab17068ce191c5886.css" integrity="sha512-Yibwb5kuDWFmsOJnJO/QUNzDgSAqdSiSulI7G4Zd4upeQn&#43;PfRDeaC/DXW50RAGCR9HyXbXh47qxcGjOGRxYhg==">
+
+
+
+    
+        <script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+></script>
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [
+        ["\\[", "\\]"],
+        ["$$", "$$"],
+      ], 
+      inlineMath: [
+        ["\\(", "\\)"],
+        ["$", "$"],
+      ], 
+    },
+  };
+</script>
+
+    
+
+    
+    <script>
+        if (!('theme' in localStorage)) {
+            localStorage.theme = 'dark';
+        }
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.setAttribute("data-theme", "dark");
+        } else {
+            document.documentElement.setAttribute("data-theme", "light");
+        }
+    </script>
+<script defer src="/js/header.64a5d751579791aca02cca13ec10c056a8bb0de07cc69a70f0ef401bb0f470f2360e07f1f6f4398e0681f9abd2c64b3cb9d167ee471fa2a07bb1943e06e0c02b.js" integrity="sha512-ZKXXUVeXkaygLMoT7BDAVqi7DeB8xppw8O9AG7D0cPI2Dgfx9vQ5jgaB&#43;avSxks8udFn7kcfoqB7sZQ&#43;BuDAKw=="></script>
+
+
+
+    <script defer src="/js/zooming.684b5d075bf94d0adfa21a7e7eb9acec1ddfb2e7b47d6657981617f0db0cf50949f1172801595afa3051f51b28d67f6a2d0c41be677b59b564307d9dbe4a4fd2.js" integrity="sha512-aEtdB1v5TQrfohp&#43;frms7B3fsue0fWZXmBYX8NsM9QlJ8RcoAVla&#43;jBR9Rso1n9qLQxBvmd7WbVkMH2dvkpP0g=="></script>
+
+
+
+
+
+
+
+    
+        
+
+        
+        
+
+        
+        
+            
+        
+
+        <script defer src="/js/prism.ea52843de9ef49f2fd5ada5a4e0efb81dd05ae250cb815846dfa3fb988498c70ae2cc567a635da79ffd407054622cea929e1b5fa00977f69c48e373b728cb9cd.js" integrity="sha512-6lKEPenvSfL9WtpaTg77gd0FriUMuBWEbfo/uYhJjHCuLMVnpjXaef/UBwVGIs6pKeG1&#43;gCXf2nEjjc7coy5zQ==" data-manual></script>
+    
+
+
+
+    
+    
+    
+    <script defer src="/js/search-en.8cd463f33435ae60ec235d29b551a78c4fe834221c0da357bbd082f8584f212d43268611418f29d0da8924e5e721a591bf7d52850ae19e0ba9c7e39626bb9620.js" integrity="sha512-jNRj8zQ1rmDsI10ptVGnjE/oNCIcDaNXu9CC&#43;FhPIS1DJoYRQY8p0NqJJOXnIaWRv31ShQrhngupx&#43;OWJruWIA=="></script>
+
+
+
+
+<link rel="stylesheet" href="https://3HLD.github.io/user.css">
+
+    
+
+</head>
+<body><header>
+    <div id="header_left">
+        <div id="sidebar_btn">
+            <input type="checkbox" id="sidebar_btn_input" class="hidden" />
+            <label id="sidebar_btn_label" for="sidebar_btn_input">
+                <svg id="menu_icon" width="26px" height="26px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+</svg>
+
+</svg>
+            </label>
+            <label id="sidebar_canvas_overlay_wrapper" for="sidebar_btn_input">
+                <div id="sidebar_canvas_overlay"></div>
+            </label>
+            <div id="sidebar">
+                <ul><li>
+                            <a href="/">💻 About</a></li><li>
+                            <a href="/news/">📰 News</a></li><li>
+                            <a href="/writeups/">📑 Writeups</a></li></ul>
+            </div>
+        </div>
+    
+        <div class="brand">
+            <div>
+                <a href="/">3HLD</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="toolbox">
+        <div id="theme_tool">
+            <svg id="dark_mode_btn" class="toolbox-btn" width="18px" height="18px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+</svg>
+
+</svg>
+            <svg id="light_mode_btn" class="toolbox-btn" width="18px" height="18px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+</svg>
+
+</svg>
+        </div>
+
+        
+            <div id="search_tool">
+                <svg id="search_btn" class="toolbox-btn" width="18px" height="18px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+</svg>
+
+</svg><div id="search_menu_wrapper" class="hidden">
+    <div id="search_menu">
+        <div id="search_menu_toolbar">
+            <div id="search_menu_input_wrapper">
+                <input id="search_menu_input" type="text" placeholder='Search Posts'>
+            </div>
+            <div id="search_menu_close_btn">
+                <svg width="18px" height="18px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+</svg>
+
+</svg>
+            </div>
+        </div>
+        <div id="search_menu_results">
+        </div>
+    </div>
+</div>
+</div>
+        
+
+        
+    </div>
+</header>
+<nav id="navbar" class="pure-menu">
+    <ul class="pure-menu-list"><li class="navbar-item pure-menu-item ">
+                    
+                        <a href="/" class="pure-menu-link">💻 About</a>
+                    
+                </li><li class="navbar-item pure-menu-item ">
+                    
+                        <a href="/news/" class="pure-menu-link">📰 News</a>
+                    
+                </li><li class="navbar-item pure-menu-item insection">
+                    
+                        <a href="/writeups/" class="pure-menu-link">📑 Writeups</a>
+                    
+                </li></ul>
+</nav>
+<main>
+      <div id="content" class="content-margin">
+        
+    
+    <details class="collapsible-menu-wrapper"><summary class="collapsible-menu-type"><span>Table of contents</span></summary><div class="collapsible-menu">
+        
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#dowpurfiy-workflows-">DOWPURFIY WORKFLOWS :</a></li>
+    <li><a href="#how-mxss-happens-">How MXSS happens :</a></li>
+    <li><a href="#foreign-content">Foreign Content</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#node-flattening">Node Flattening</a></li>
+    <li><a href="#html-parsing-state-">HTML Parsing State :</a></li>
+    <li><a href="#bump-element">BUMP ELEMENT</a></li>
+    <li><a href="#cơ-chế-foster-parenting">Cơ chế foster parenting</a></li>
+    <li><a href="#final-">Final :</a></li>
+  </ul>
+</nav>
+        
+    </div></details>
+
+
+
+<div class="tags">
+  
+    <div class="badge">CTF</div>
+
+  
+    <div class="badge">Web</div>
+
+  
+</div>
+
+<div>
+  <p class="date">
+    Last edit: Jun 23, 2025
+  </p>
+</div>
+
+
+    <div class="content-margin">
+
+
+
+<article >
+    
+    
+        
+        
+    
+    
+<h1 id="deep-down-to-dompurify" class="header-anchor-wrapper">DEEP DOWN TO DOMPURIFY
+  <a href="#deep-down-to-dompurify" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<p>Some note when learning mxss.
+Source : <a href="https://mizu.re/post/exploring-the-dompurify-library-bypasses-and-fixes">https://mizu.re/post/exploring-the-dompurify-library-bypasses-and-fixes</a></p>
+
+<h2 id="dowpurfiy-workflows-" class="header-anchor-wrapper">DOWPURFIY WORKFLOWS :
+  <a href="#dowpurfiy-workflows-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<p><img alt="image" src="https://hackmd.io/_uploads/BkojtKgDgl.png"></p>
+<ol>
+<li><em>initDocument</em> : Dùng  API <a href="https://developer.mozilla.org/en-US/docs/Web/API/DOMParser">DOMParser</a> để parse dữ liệu đúng như Browser parse</li>
+<li><em>createNodeIterator</em> : Dùng API <a href="https://developer.mozilla.org/en-US/docs/Web/API/NodeIterator">NodeIterator</a> để iterate qua tất cả các node</li>
+<li><em>sanitizeElement</em> :  Kiểm tra tag allowed or not</li>
+<li>_sanitizeShadowDOM  : The NodeIterator API doesn&rsquo;t iterate over the template tag by default. Recursively sanitizes when it reaches a DocumentFragment.</li>
+<li>_sanitizeAttributes : dùng dom apis để sanitize  HTML attributes .</li>
+<li>Output</li>
+</ol>
+
+<h2 id="how-mxss-happens-" class="header-anchor-wrapper">How MXSS happens :
+  <a href="#how-mxss-happens-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<ul>
+<li>Vậy thì DOMPurify sử dụng cùng một hệ thống dom parser với browser vậy thì làm thế nào mà MXSS xảy ra . Có một vấn đề khá lớn đã được đề cập trong w3c :
+<img alt="image" src="https://hackmd.io/_uploads/HyNGjYevex.png">
+Parse một html string  <strong>2 lần</strong> có thể dẫn đến những kết quả khác nhau .
+Ví dụ  :
+Dựa vào tính chất không chứa tag form trong form ta có thể khiến mutation xảy ra :
+<img alt="image" src="https://hackmd.io/_uploads/B1Vw2Kgvle.png">
+<img alt="image" src="https://hackmd.io/_uploads/rJlX2KlDgg.png">
+Note :
+<strong>Kết quả domparser đầu tiên là thứ mà DOM purify thấy và đã check xong return về. Kết quả thứ 2 là những gì browser cho ra cuối cùng</strong>
+Đọc thêm ở : <a href="https://research.securitum.com/mutation-xss-via-mathml-mutation-dompurify-2-0-17-bypass/?utm_source=chatgpt.com">https://research.securitum.com/mutation-xss-via-mathml-mutation-dompurify-2-0-17-bypass/?utm_source=chatgpt.com</a></li>
+</ul>
+<p><img alt="image" src="https://hackmd.io/_uploads/rJH1JqxPxx.png"></p>
+
+<h2 id="foreign-content" class="header-anchor-wrapper">Foreign Content
+  <a href="#foreign-content" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<p>Hầu hết các element sẽ thuộc HTML namespace nhưng cũng có một vài element như svg và math thì svg và math sẽ thuộc cái namespace khác nhau gọi chung là Foreign Content .</p>
+<p>Cụ thể có sự khác biệt giữa tag style trong HTML namespace vs SVG namespace .
+<img alt="image" src="https://hackmd.io/_uploads/SJotZ5eDel.png">
+Trong html namespace thì trong style chỉ chứa text nhưng trong svg thì chứa cả element .Nhưng không hẳn là lúc nào trong foreign content thì cũng không chứa HTML namespace , ta sẽ có một vài điểm để bật html gọi là <strong>intergration point</strong>.
+<img alt="image" src="https://hackmd.io/_uploads/rkmSGqgwgg.png">
+<img alt="image" src="https://hackmd.io/_uploads/SkqzQcxwel.png">
+Chỉ khi token đầu tiên trong mtext là mglyph hoặc malign mark
+<img alt="image" src="https://hackmd.io/_uploads/SJAVmqewee.png"></p>
+
+<h1 id="rules-to-decide-the-namespace-" class="header-anchor-wrapper">Rules to decide the namespace :
+  <a href="#rules-to-decide-the-namespace-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<p><img alt="image" src="https://hackmd.io/_uploads/B1EhSqxvgl.png"></p>
+
+<h2 id="node-flattening" class="header-anchor-wrapper">Node Flattening
+  <a href="#node-flattening" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<p>Một câu hỏi khá hay là DOM có thể sâu tới bao nhiêu layers ?
+Không có một giới hạn cụ thể nào nên phụ thuộc vào thư viện<br>
+<img alt="image" src="https://hackmd.io/_uploads/ry2eI5xPgx.png">
+<img alt="image" src="https://hackmd.io/_uploads/SyTbLcgPxe.png">
+Ồ  vậy là chính DOM parser đã có limit là 512 nested Node và sẽ <strong>Flattening</strong> ?
+<img alt="image" src="https://hackmd.io/_uploads/SkJU8cxPxg.png">
+Ta có thể thấy khi vượt ngưỡng nó sẽ flat tag nested cuối cùng . Và kết quả sau khi reparse là :
+<img alt="image" src="https://hackmd.io/_uploads/r1E389gPle.png"></p>
+
+<h2 id="html-parsing-state-" class="header-anchor-wrapper">HTML Parsing State :
+  <a href="#html-parsing-state-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<p>Ta sẽ cần hiểu 2 concepts sau  :</p>
+<ol>
+<li>Insertion modes</li>
+<li>Stack of open elements</li>
+</ol>
+<p>Ta sẽ tập trung vào insert modes của captions in table tag :
+<img alt="image" src="https://hackmd.io/_uploads/rkMS2qxDgx.png">
+Ta sẽ thấy nếu như đang trong mode in caption mà gặp thêm một tag caption nữa thì sẽ pop stack cho tới khi caption được pop out ra sau đó chuyển về in tables mode . Stack đơn giản là đọc từ trên xuống và đưa vào stack khi là start tag và pop khi là close tag . Vậy what could go wrong. Ta nhìn vào snippet sau  :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-html">&lt;table&gt;
+  &lt;caption&gt;
+    &lt;div&gt;before&lt;/div&gt;
+    &lt;caption&gt;&lt;/caption&gt;
+    &lt;div&gt;after&lt;/div&gt;
+  &lt;/caption&gt;
+&lt;/table&gt;
+</code></pre>
+<p>Khi parser đọc đến caption tag đầu tiên nó sẽ được vào stack và khi chạm phải open tag caption tiếp theo nó sẽ bắt đầu close tag cho đến khi caption đã được pop out khỏi tag và switch sang intable mode dẫn đến việc trên stack không tồn tại caption nữa và tag &lt;/caption&gt; cũng vô nghĩa =&gt;  div after sẽ bị chuyển về intable modes nhưng vì divs cũng không hợp lệ trong tables dẫn đến bị pop out ra và cho kết quả như sau :
+<img alt="image" src="https://hackmd.io/_uploads/ry51Tcgwgg.png">
+Nhưng có  một vấn đề cuối cùng là caption không thể được nest như trong snippet thế nên để bypass cái này thì ta sẽ lợi dụng Node Flattening và kết quả là :
+<img alt="image" src="https://hackmd.io/_uploads/SJMpC5xwll.png">
+Ta đã có caption nested in caption và mxss go here</p>
+<pre  class="mc-prism hide language-text" ><code>Final payload : https://yeswehack.github.io/Dom-Explorer/frame?input=editable&amp;titleBar=readonly&amp;readonly=true&amp;pipe[titleBar]=true&amp;pipe[settings]=true&amp;pipe[render]=true&amp;pipe[skip]=true/#eyJpbnB1dCI6IjxkaXYqNTA2PlxuPHRhYmxlPlxuICA8Y2FwdGlvbj5cbiAgICA8c3ZnPlxuICAgICAgPHRpdGxlPlxuICAgICAgICA8dGFibGU+PGNhcHRpb24+PC9jYXB0aW9uPjwvdGFibGU+XG4gICAgICA8L3RpdGxlPlxuICAgICAgPHN0eWxlPjxhIGlkPVwiPC9zdHlsZT48aW1nIHNyYz14IG9uZXJyb3I9YWxlcnQoKT5cIj48L2E+PC9zdHlsZT5cbiAgICA8L3N2Zz5cbiAgPC9jYXB0aW9uPlxuPC90YWJsZT4iLCJwaXBlbGluZXMiOlt7ImlkIjoiMGFkcXN1YWoiLCJuYW1lIjoiRG9tIFRyZWUiLCJwaXBlcyI6W3sibmFtZSI6IkRvbVB1cmlmeSIsImlkIjoiZXJsNXR6ZXMiLCJoaWRlIjp0cnVlLCJza2lwIjpmYWxzZSwib3B0cyI6eyJ2ZXJzaW9uIjoiMy4xLjAiLCJvcHRpb25zIjoie30ifX0seyJuYW1lIjoiRG9tUGFyc2VyIiwiaWQiOiJiNTRyd2RiNSIsImhpZGUiOmZhbHNlLCJza2lwIjpmYWxzZSwib3B0cyI6eyJ0eXBlIjoidGV4dC9odG1sIiwic2VsZWN0b3IiOiJib2R5Iiwib3V0cHV0IjoiaW5uZXJIVE1MIiwiYWRkRG9jdHlwZSI6dHJ1ZX19XX1dfQ== 
+</code></pre>
+
+<h2 id="bump-element" class="header-anchor-wrapper">BUMP ELEMENT
+  <a href="#bump-element" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<p><img alt="image" src="https://hackmd.io/_uploads/rkbOTjxveg.png">
+CÁI  GÌ ĐANG XẢY RA Ở ĐÂY V  ? :
+Cùng đọc docs nhé <a href="https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-intable">https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-intable</a></p>
+<p>Có vẻ là do&lt;/form&gt; nên mới bug ở đây
+<img alt="image" src="https://hackmd.io/_uploads/rJurEhePxe.png">
+Xóa start form thì vẫn ăn =)) vậy tức là do thằng cu &lt;/form&gt; mẹ ròi</p>
+<p>Vi &lt;/form&gt; la invalid tag sẽ fallback về foster parenting
+<img alt="image" src="https://hackmd.io/_uploads/HyETt6evxe.png"></p>
+
+<h2 id="cơ-chế-foster-parenting" class="header-anchor-wrapper">Cơ chế foster parenting
+  <a href="#c%c6%a1-ch%e1%ba%bf-foster-parenting" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<p>Trong HTML parsing, foster parenting là một cơ chế đặc biệt được quy định trong HTML parsing algorithm để xử lý một số trường hợp không hợp lệ (misnested), cụ thể là khi bạn chèn các thẻ không hợp lệ vào giữa các thẻ như <code>&lt;table&gt;, &lt;tbody&gt;, &lt;tr&gt;, v.v.</code></p>
+<p>Ví dụ trường hợp là tag h1
+<img alt="image" src="https://hackmd.io/_uploads/rJzOnplPle.png">
+Thì sẽ được đẩy vào form , vì form không thể chứa <strong><code>&lt;form&gt;</code></strong> như ta đã biết nhưng còn <code>**&lt;/form&gt;**</code> thì sao ?
+Khi nhảy ra ngoài form nó cũng không valid nên nó nhảy ra tới tag body và vì thế ôm luôn thằng div ??
+<img alt="image" src="https://hackmd.io/_uploads/ByGP66eDlx.png"></p>
+<p>Sau một hồi test thì có vẻ không phải như vậy.
+Vậy nguyên nhân là do đâu mà BUMP hoạt động ?</p>
+
+<h2 id="final-" class="header-anchor-wrapper">Final :
+  <a href="#final-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<ul>
+<li>
+<p>Sau một hồi đọc docx thì mình cũng nhận ra điều sau :
+Ta thấy khi gặp &lt;/form&gt; sẽ có những action sau, đặc biệt là 2. và 3. khi kết hợp lại có thể xóa đi một <strong>form element pointer nhưng vẫn không xóa node đó khỏi stack</strong>
+<img alt="image" src="https://hackmd.io/_uploads/SkYD_kZwxl.png"></p>
+</li>
+<li>
+<p>Điều kiện số 3 sẽ kiểm tra có node trong scope hay không ? Thế nghĩa là sao ? Ta nhìn vào đoạn sau :
+<img alt="image" src="https://hackmd.io/_uploads/Sy-PKJZDgl.png">
+Hiểu đơn giản là :
+<strong>Một phần tử được coi là &ldquo;in scope&rdquo; nếu nó nằm trên stack, và không bị &ldquo;che mất&rdquo; bởi các phần tử đặc biệt khác như table, select, template, etc.</strong></p>
+</li>
+<li>
+<p>Khi được foster parenting stack hiện là :
+[body , form , table ] với <strong>table</strong> là blocking tag nên khi trigger &lt;/form&gt; sẽ trigger trường hợp thứ ba nhưng đồng thời set <strong>form element về null</strong> dẫn đến &lt;/form&gt; cuối cùng không đóng form này lại được . và form vẫn nằm trên stack và nhận children  =))))
+=&gt; &lt;/form&gt; đã bị chặn bởi tag table</p>
+</li>
+</ul>
+<p>Tổng kết flow như sau :
+<img alt="image" src="https://hackmd.io/_uploads/HyY6jkZDlg.png"></p>
+<p>Dựa trên điều đó ta có thể thay thế blocking scope tag và có cùng effect :
+<img alt="image" src="https://hackmd.io/_uploads/Hk43JgbDxe.png"></p>
+
+</article>
+</div>
+   
+      </div>
+    </main>
+<footer>
+    <article>Copyright © 2025 by 3HLD Team | v1.0</article>
+</footer>
+
+</body>
+</html>
