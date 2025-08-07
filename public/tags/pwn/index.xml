@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Pwn on 3HLD</title>
-    <link>http://localhost:1313/tags/pwn/</link>
+    <link>https://3HLD.github.io/tags/pwn/</link>
     <description>Recent content in Pwn on 3HLD</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 23 Jun 2025 18:30:32 +0200</lastBuildDate><atom:link href="http://localhost:1313/tags/pwn/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 23 Jun 2025 18:30:32 +0200</lastBuildDate><atom:link href="https://3HLD.github.io/tags/pwn/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>l3akctf2025</title>
-      <link>http://localhost:1313/writeups/l3akctf2025/</link>
+      <link>https://3HLD.github.io/writeups/l3akctf2025/</link>
       <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
       
-      <guid>http://localhost:1313/writeups/l3akctf2025/</guid>
+      <guid>https://3HLD.github.io/writeups/l3akctf2025/</guid>
       <description> l3akctf2025 Performance Summary CTFs: 8/22 Total points: 3863 Position: 40 Rating points: 7.132 Writeups Category flagguessr dumber </description>
     </item>
     
     <item>
       <title>MaltaCTF 2025</title>
-      <link>http://localhost:1313/writeups/maltactf2025/</link>
+      <link>https://3HLD.github.io/writeups/maltactf2025/</link>
       <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
       
-      <guid>http://localhost:1313/writeups/maltactf2025/</guid>
+      <guid>https://3HLD.github.io/writeups/maltactf2025/</guid>
       <description> MaltaCTF 2025 Performance Summary Total points: 301 Position: 85 Rating points: ? Writeups Category Fancy </description>
     </item>
     

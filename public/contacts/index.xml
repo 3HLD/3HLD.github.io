@@ -2,9 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Contacts on 3HLD</title>
-    <link>http://localhost:1313/contacts/</link>
+    <link>https://3HLD.github.io/contacts/</link>
     <description>Recent content in Contacts on 3HLD</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language><atom:link href="http://localhost:1313/contacts/index.xml" rel="self" type="application/rss+xml" />
+    <language>en</language><atom:link href="https://3HLD.github.io/contacts/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

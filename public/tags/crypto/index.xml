@@ -2,27 +2,38 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Crypto on 3HLD</title>
-    <link>http://localhost:1313/tags/crypto/</link>
+    <link>https://3HLD.github.io/tags/crypto/</link>
     <description>Recent content in Crypto on 3HLD</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 23 Jun 2025 18:30:32 +0200</lastBuildDate><atom:link href="http://localhost:1313/tags/crypto/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 23 Jun 2025 18:30:32 +0200</lastBuildDate><atom:link href="https://3HLD.github.io/tags/crypto/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>l3akctf2025</title>
-      <link>http://localhost:1313/writeups/l3akctf2025/</link>
+      <link>https://3HLD.github.io/writeups/l3akctf2025/</link>
       <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
       
-      <guid>http://localhost:1313/writeups/l3akctf2025/</guid>
+      <guid>https://3HLD.github.io/writeups/l3akctf2025/</guid>
       <description> l3akctf2025 Performance Summary CTFs: 8/22 Total points: 3863 Position: 40 Rating points: 7.132 Writeups Category flagguessr dumber </description>
     </item>
     
     <item>
       <title>MaltaCTF 2025</title>
-      <link>http://localhost:1313/writeups/maltactf2025/</link>
+      <link>https://3HLD.github.io/writeups/maltactf2025/</link>
       <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
       
-      <guid>http://localhost:1313/writeups/maltactf2025/</guid>
+      <guid>https://3HLD.github.io/writeups/maltactf2025/</guid>
       <description> MaltaCTF 2025 Performance Summary Total points: 301 Position: 85 Rating points: ? Writeups Category Fancy </description>
+    </item>
+    
+    <item>
+      <title>dumber</title>
+      <link>https://3HLD.github.io/writeups/l3akctf2025/dumber/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://3HLD.github.io/writeups/l3akctf2025/dumber/</guid>
+      <description>Dumber Source code của bài:
+from Crypto.Util.number import bytes_to_long, long_to_bytes from sage.all import * a,b,p = ?,?,? pt1=&amp;quot;L3AK{test_&amp;quot; pt2=&amp;quot;flag}&amp;quot; E = EllipticCurve(Zmod(p), [a, b]) p,q=E.random_element(),E.random_element() u=bytes_to_long(pt1.encode())*p v=bytes_to_long(pt2.encode())*q # I will help u &amp;lt;3 print(p,u,q,v) Và một file output.txt
+(103905521866731574234430443362297034336 : 116589269353056499566212456950780999584 : 1) (171660318017081135625337806416866746485 : 122407097490400018041253306369079974706 : 1) (161940138185633513360673631821653803879 : 167867902631659599239485617419980253311 : 1) (95406403280474692216804281695624776780 : 109560844064302254814641159241201048462 : 1) Phân tích Ở bài này cho mình một đường cong Elliptic nhưng các tham số $a,b,p$ bị ẩn đi nhưng bù lại mình được biết thông tin về 4 điểm nằm trên đường cong này.</description>
     </item>
     
   </channel>
