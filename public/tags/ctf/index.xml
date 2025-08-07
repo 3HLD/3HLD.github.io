@@ -35,5 +35,15 @@
 DOWPURFIY WORKFLOWS : initDocument : Dùng API DOMParser để parse dữ liệu đúng như Browser parse createNodeIterator : Dùng API NodeIterator để iterate qua tất cả các node sanitizeElement : Kiểm tra tag allowed or not _sanitizeShadowDOM : The NodeIterator API doesn&amp;rsquo;t iterate over the template tag by default. Recursively sanitizes when it reaches a DocumentFragment. _sanitizeAttributes : dùng dom apis để sanitize HTML attributes .</description>
     </item>
     
+    <item>
+      <title>Some note on Prototype pollution to RCE</title>
+      <link>https://3HLD.github.io/writeups/pp2rce/</link>
+      <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
+      
+      <guid>https://3HLD.github.io/writeups/pp2rce/</guid>
+      <description>DEEP DOWN TO EJS Example usage : Đơn giản như sau thui : const ejs = require(&amp;quot;ejs&amp;quot;) const template = &#39;&amp;lt;h1&amp;gt;Hello &amp;lt;%= name %&amp;gt;&amp;lt;/h1&amp;gt;&#39;; ejs.clearCache(); const data = { name: &amp;quot;12113awefeaw&amp;quot; } const compiled = ejs.render(template, data, {}); console.log(compiled.toString()) How ejs works Ta cùng đọc qua về hàm render :
+exports.render = function (template, d, o) { var data = d || utils.createNullProtoObjWherePossible(); var opts = o || utils.createNullProtoObjWherePossible(); // No options object -- if there are optiony names // in the data, copy them to options if (arguments.</description>
+    </item>
+    
   </channel>
 </rss>
