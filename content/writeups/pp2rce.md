@@ -726,7 +726,7 @@ https://x.com/arkark_/status/1943260773268230205?s=46
 
 # Challenges : 
 - Mình có làm một challenge nhỏ , mọi người có thể chơi thử và nếu có thắc mắc thì có thể DM mình nhé : 
-https://drive.google.com/file/d/14RMwQ2WIy2g1zQl3mAE1PT7ikJkPh1zs/view?usp=sharing
+https://drive.google.com/file/d/1Me7WBTw2pHqhwHM2lQncnwmwlcfF3IEw/view?usp=sharing
 - Lần đầu mình làm chall nên chắc sẽ có nhiều bug unintend đấy :v 
 
 

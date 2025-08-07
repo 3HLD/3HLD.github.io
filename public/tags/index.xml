@@ -2,125 +2,62 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on 3HLD</title>
-    <link>https://3HLD.github.io/tags/</link>
+    <link>http://localhost:1313/tags/</link>
     <description>Recent content in Tags on 3HLD</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 23 Jun 2025 18:30:32 +0200</lastBuildDate><atom:link href="https://3HLD.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>204 Points</title>
-      <link>https://3HLD.github.io/tags/204-points/</link>
-      <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
-      
-      <guid>https://3HLD.github.io/tags/204-points/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>25 Solves</title>
-      <link>https://3HLD.github.io/tags/25-solves/</link>
-      <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
-      
-      <guid>https://3HLD.github.io/tags/25-solves/</guid>
-      <description></description>
-    </item>
-    
+    <lastBuildDate>Mon, 23 Jun 2025 18:30:32 +0200</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Crypto</title>
-      <link>https://3HLD.github.io/tags/crypto/</link>
+      <link>http://localhost:1313/tags/crypto/</link>
       <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
       
-      <guid>https://3HLD.github.io/tags/crypto/</guid>
+      <guid>http://localhost:1313/tags/crypto/</guid>
       <description></description>
     </item>
     
     <item>
       <title>CTF</title>
-      <link>https://3HLD.github.io/tags/ctf/</link>
+      <link>http://localhost:1313/tags/ctf/</link>
       <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
       
-      <guid>https://3HLD.github.io/tags/ctf/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Downgrade</title>
-      <link>https://3HLD.github.io/tags/downgrade/</link>
-      <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
-      
-      <guid>https://3HLD.github.io/tags/downgrade/</guid>
+      <guid>http://localhost:1313/tags/ctf/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Misc</title>
-      <link>https://3HLD.github.io/tags/misc/</link>
+      <link>http://localhost:1313/tags/misc/</link>
       <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
       
-      <guid>https://3HLD.github.io/tags/misc/</guid>
+      <guid>http://localhost:1313/tags/misc/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Pwn</title>
-      <link>https://3HLD.github.io/tags/pwn/</link>
+      <link>http://localhost:1313/tags/pwn/</link>
       <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
       
-      <guid>https://3HLD.github.io/tags/pwn/</guid>
+      <guid>http://localhost:1313/tags/pwn/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Reverse Engineering</title>
-      <link>https://3HLD.github.io/tags/reverse-engineering/</link>
+      <link>http://localhost:1313/tags/reverse-engineering/</link>
       <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
       
-      <guid>https://3HLD.github.io/tags/reverse-engineering/</guid>
+      <guid>http://localhost:1313/tags/reverse-engineering/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Web</title>
-      <link>https://3HLD.github.io/tags/web/</link>
+      <link>http://localhost:1313/tags/web/</link>
       <pubDate>Mon, 23 Jun 2025 18:30:32 +0200</pubDate>
       
-      <guid>https://3HLD.github.io/tags/web/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>147 Solves</title>
-      <link>https://3HLD.github.io/tags/147-solves/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://3HLD.github.io/tags/147-solves/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>499 Points</title>
-      <link>https://3HLD.github.io/tags/499-points/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://3HLD.github.io/tags/499-points/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>50 Points</title>
-      <link>https://3HLD.github.io/tags/50-points/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://3HLD.github.io/tags/50-points/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>6 Solves</title>
-      <link>https://3HLD.github.io/tags/6-solves/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://3HLD.github.io/tags/6-solves/</guid>
+      <guid>http://localhost:1313/tags/web/</guid>
       <description></description>
     </item>
     
